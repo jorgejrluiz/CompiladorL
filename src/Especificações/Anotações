@@ -1,0 +1,48 @@
+letras, digitos, espaço, sublinhado, '.' , ',', ';', ':', '(', ')', '[', ']', '{', '}', '+', '-', aspas, apóstrofo, '/', '%', '@', '!', '?', '>', '<', '='
+
+diferente ≠
+
+Vão direto: 
+
+'.' , ',', ';', '(', ')', '[', ']', '{', '}', '+', '-', '%', '@', '!', '?', '=', '*'
+
+se ler ':' pode ser:
+	 = 
+	 ir direto
+
+se ler '<' pode ser:
+	>
+	=
+	ir direto
+	
+	'>', '=', ≠'>', ≠'='
+	
+se ler '>' pode ser:
+	=
+	ir direto
+	
+	'=',  ≠'='
+
+Identificadores de constantes e variáveis:
+Letra > letra, digito, sublinhado > ≠letra, ≠digito, ≠sublinhado
+Pode começar com _ > letra, digito
+
+Hexadecimal: 0DDh
+	0 > 0...9, A...F > 0...9, A...F > h
+	
+Numero:
+	1...9 > 0...9 > ≠0...9
+	
+Comentarios: /**/
+	/ > ir direto
+	/ > * > ≠* > * > * > ≠*, ≠/ > /
+
+String:
+	aspas > letra, digito, ≠'\n', ≠$ > aspas
+	apóstrofo > 
+
+
+Dúvidas:
+	Quebra de linha: (bytes 0Dh e 0Ah)?
+	Constantes em formato alfanumérico são da forma ‘c’ onde c é um caractere imprimível.?
+	apóstrofo?

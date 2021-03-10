@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with JFLAP 7.1.--><structure>
+	<type>fa</type>
+	<automaton>
+		<!--The list of states.-->
+		<state id="0" name="q0">
+			<x>410.0</x>
+			<y>386.0</y>
+			<initial/>
+		</state>
+		<state id="1" name="q14">
+			<x>962.0</x>
+			<y>386.0</y>
+			<final/>
+		</state>
+		<state id="2" name="q8">
+			<x>711.0</x>
+			<y>481.0</y>
+		</state>
+		<state id="3" name="q9">
+			<x>743.0</x>
+			<y>520.0</y>
+		</state>
+		<state id="4" name="q10">
+			<x>788.0</x>
+			<y>561.0</y>
+		</state>
+		<state id="5" name="q5">
+			<x>648.0</x>
+			<y>270.0</y>
+		</state>
+		<state id="6" name="q11">
+			<x>502.0</x>
+			<y>496.0</y>
+		</state>
+		<state id="7" name="q7">
+			<x>675.0</x>
+			<y>443.0</y>
+		</state>
+		<state id="8" name="q12">
+			<x>654.0</x>
+			<y>580.0</y>
+		</state>
+		<state id="9" name="q13">
+			<x>819.0</x>
+			<y>594.0</y>
+		</state>
+		<state id="10" name="q3">
+			<x>596.0</x>
+			<y>199.0</y>
+		</state>
+		<state id="11" name="q2">
+			<x>496.0</x>
+			<y>205.0</y>
+		</state>
+		<state id="12" name="q1">
+			<x>423.0</x>
+			<y>299.0</y>
+		</state>
+		<state id="13" name="q6">
+			<x>638.0</x>
+			<y>348.0</y>
+		</state>
+		<state id="14" name="q4">
+			<x>525.0</x>
+			<y>288.0</y>
+		</state>
+		<!--The list of transitions.-->
+		<transition>
+			<from>14</from>
+			<to>5</to>
+			<controlx>572</controlx>
+			<controly>272</controly>
+			<read>letra, digito</read>
+		</transition>
+		<transition>
+			<from>7</from>
+			<to>7</to>
+			<controlx>670</controlx>
+			<controly>396</controly>
+			<read>0...9</read>
+		</transition>
+		<transition>
+			<from>12</from>
+			<to>11</to>
+			<read>≠*, ≠'/'</read>
+		</transition>
+		<transition>
+			<from>4</from>
+			<to>1</to>
+			<read>'=',  ≠'=', devolve</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>5</to>
+			<controlx>645</controlx>
+			<controly>231</controly>
+			<read>letra, digito, sublinhado</read>
+		</transition>
+		<transition>
+			<from>6</from>
+			<to>8</to>
+			<read>0...9, A...F</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>14</to>
+			<controlx>471</controlx>
+			<controly>336</controly>
+			<read>sublinhado</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>1</to>
+			<read>'=',  ≠'=', devolve</read>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>11</to>
+			<controlx>491</controlx>
+			<controly>162</controly>
+			<read>≠*</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>3</to>
+			<controlx>548</controlx>
+			<controly>487</controly>
+			<read>'&lt;'</read>
+		</transition>
+		<transition>
+			<from>7</from>
+			<to>1</to>
+			<read>≠0...9, devolve</read>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>12</to>
+			<read>*</read>
+		</transition>
+		<transition>
+			<from>13</from>
+			<to>1</to>
+			<read>aspas, apóstrofo, devolve</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>4</to>
+			<controlx>570</controlx>
+			<controly>530</controly>
+			<read>'&gt;'</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>1</to>
+			<controlx>685</controlx>
+			<controly>390</controly>
+			<read>'.' , ',', ';', '(', ')', '[', ']', '{', '}', '+', '-', '%', '@', '!', '?', '=', '*'</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>2</to>
+			<controlx>546</controlx>
+			<controly>450</controly>
+			<read>':'</read>
+		</transition>
+		<transition>
+			<from>10</from>
+			<to>11</to>
+			<controlx>538</controlx>
+			<controly>203</controly>
+			<read>*</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>6</to>
+			<read>0</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>7</to>
+			<controlx>522</controlx>
+			<controly>420</controly>
+			<read>1...9</read>
+		</transition>
+		<transition>
+			<from>9</from>
+			<to>1</to>
+			<read>'h', devolve</read>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>1</to>
+			<controlx>841</controlx>
+			<controly>462</controly>
+			<read>'&gt;', '=', ≠'&gt;', ≠'=', devolve</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>5</to>
+			<read>letra</read>
+		</transition>
+		<transition>
+			<from>12</from>
+			<to>12</to>
+			<controlx>422</controlx>
+			<controly>261</controly>
+			<read>*</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>1</to>
+			<read>≠letra, ≠digito, ≠sublinhado, devolve</read>
+		</transition>
+		<transition>
+			<from>13</from>
+			<to>13</to>
+			<controlx>639</controlx>
+			<controly>311</controly>
+			<read>letra, digito, ≠'\n', ≠$</read>
+		</transition>
+		<transition>
+			<from>12</from>
+			<to>0</to>
+			<read>'/'</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>13</to>
+			<read>aspas, apóstrofo</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>10</to>
+			<controlx>475</controlx>
+			<controly>260</controly>
+			<read>'/'</read>
+		</transition>
+		<transition>
+			<from>10</from>
+			<to>1</to>
+			<controlx>771</controlx>
+			<controly>202</controly>
+			<read>≠*</read>
+		</transition>
+		<transition>
+			<from>8</from>
+			<to>9</to>
+			<read>0...9, A...F</read>
+		</transition>
+	</automaton>
+</structure>
