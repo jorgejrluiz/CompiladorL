@@ -1,7 +1,7 @@
 /**
 * Trabalho de compiladores - Analisador Lexico
 * Professor: Alexei Machado
-* 
+*
 * @author Ana Flavia
 * @author Jorge Luiz
 * @author Stefany Gaspar
@@ -24,7 +24,7 @@ public class AnalisadorLexico{
     public boolean devolve;
     public boolean fimDeArquivo;
     public boolean debugMode = false;
-    
+
     /**
      * Metodo construtor analisador lexico
      * @param bufferedReader arquivo que sera lido
@@ -38,14 +38,14 @@ public class AnalisadorLexico{
         errorCompilacao = devolve = fimDeArquivo = false;
     }
 
-    
+
     /**
      * Metodo da maquina de estados do analisador lexico
      * @return Simbolo retorna o simbolo criado
      */
     public Simbolo maquinaDeEstados() {
         int estadoAtual = 0;
-        int estadoFinal = 13;
+        int estadoFinal = 14;
 
         while(estadoAtual != estadoFinal){
             switch (estadoAtual) {
@@ -56,7 +56,7 @@ public class AnalisadorLexico{
         if(!fimDeArquivo) {
             if(tabelaDeSimbolos.BuscarLexema(lexema) == null) {
                 if(lexema.charAt(0) == '"' || lexema.charAt(0) == '\'' || Util.EhDigito(lexema.charAt(0))) {
-                    Simbolo simboloConst = new Simbolo(tabelaDeSimbolos.constante, lexema, tipoConst);
+                    Simbolo simboloConst = new Simbolo(tabelaDeSimbolos.CONSTANTE, lexema, tipoConst);
                     return simboloConst;
                 }else {
                     Simbolo simboloIdentificador = tabelaDeSimbolos.InserirIdentificador(lexema);
@@ -78,9 +78,9 @@ public class AnalisadorLexico{
         try {
             if(devolve) {
                 devolve = false; //Ultimo caracter
-                
+
             }else{
-                ultimaLetra = (char) codigo.read(); //Novo caracter 
+                ultimaLetra = (char) codigo.read(); //Novo caracter
             }
         }catch(Exception e){
             System.out.println("Error ao acessar arquivo");
@@ -107,7 +107,7 @@ public class AnalisadorLexico{
                 System.out.println("caractere invalido.");
             }
         }
-        
+
         errorCompilacao = true;
         System.exit(0);
     }
