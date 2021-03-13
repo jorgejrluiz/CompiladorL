@@ -38,6 +38,7 @@ public class Util{
     public static char maior = '>';
     public static char igual = '=';
     public static char asterisco = '*';
+    public static char cifrao = '$';
 
     public static char tab = 9;
     public static char barraN = 10;

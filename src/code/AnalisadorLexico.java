@@ -45,10 +45,14 @@ public class AnalisadorLexico{
      */
     public Simbolo maquinaDeEstados() {
         int estadoAtual = 0;
-        int estadoFinal = 14;
+        int estadoFinal = 18;
 
         while(estadoAtual != estadoFinal){
             switch (estadoAtual) {
+                case 1:
+                    estadoAtual = Estado1();
+                case 2:
+                    estadoAtual = Estado2();
                 default:
                     break;
               }
@@ -111,4 +115,99 @@ public class AnalisadorLexico{
         errorCompilacao = true;
         System.exit(0);
     }
+
+    public void MostrarTransicao(char caracter, int estadoAtual, int estadoFinal){
+        if(debugMode)
+            System.out.println("caracter = " + caracter +" estado atual: "+ estadoAtual + " proximo estado: "+estadoFinal);
+    }
+
+    public int Estado1() {
+        char caracter = LerCaracter();
+
+        if(caracter == Util.sublinhado){
+            lexema += caracter;
+            MostrarTransicao(caracter, 1, 1);
+            return 1;
+        } else if (Util.EhLetra(caracter) || Util.EhDigito(caracter)) {
+            lexema += caracter;
+            MostrarTransicao(caracter, 1, 2);
+            return 2;
+        }
+        MostrarErro(caracter);
+        return 18;
+    }
+
+    public int Estado2() {
+        char caracter = LerCaracter();
+
+        if(caracter == Util.sublinhado || Util.EhLetra(caracter) || Util.EhDigito(caracter)){
+            lexema += caracter;
+            MostrarTransicao(caracter, 2, 2);
+            return 2;
+        } else if(Util.EhCaracterValido(caracter)) {
+            lexema += caracter;
+            MostrarTransicao(caracter, 2, 18);
+            devolve = true;
+            return 18;
+        }
+        MostrarErro(caracter);
+        return 18;
+    }
+    
+    public int Estado3() {
+        char caracter = LerCaracter();
+
+        if(caracter == Util.asterisco){
+            MostrarTransicao(caracter, 3, 3);
+            return 3;
+        } else if(caracter != Util.asterisco || caracter != Util.barra) {
+            MostrarTransicao(caracter, 3, 4);
+            return 4;
+        }
+        MostrarErro(caracter);
+        return 18;
+    }
+
+    public int Estado4() {
+        char caracter = LerCaracter();
+
+        if(caracter == Util.asterisco){
+            MostrarTransicao(caracter, 4, 3);
+            return 3;
+        } else {
+            MostrarTransicao(caracter, 4, 4);
+            return 4;
+        }
+    }
+
+    public int Estado5() {
+        char caracter = LerCaracter();
+
+        if(caracter != Util.asterisco){
+            MostrarTransicao(caracter, 5, 18);
+            devolve = true;
+            return 18;
+        } else if(caracter == Util.asterisco){
+            MostrarTransicao(caracter, 5, 4);
+            return 4;
+        } 
+        MostrarErro(caracter);
+        return 18;
+    }
+
+    public int Estado6() {
+        char caracter = LerCaracter();
+
+        if(caracter != Util.barraN || caracter != Util.cifrao || Util.EhLetra(caracter) || Util.EhDigito(caracter)){
+            lexema += caracter;
+            MostrarTransicao(caracter, 6, 6);
+            return 6;
+        } else if (caracter == Util.aspas) {
+            MostrarTransicao(caracter, 6, 18);
+            return 18;
+        }
+        MostrarErro(caracter);
+        return 18;
+    }
+
 }

@@ -94,7 +94,7 @@ public class TabelaDeSimbolos{
       tabela.put("]", new Simbolo(COLCHETE_FECHADO, "]"));
       tabela.put("main", new Simbolo(MAIN, "main"));
       tabela.put("$", new Simbolo(CIFRAO, "cifrao"));
-      tabela.put("const", new Simbolo(CONST, "const"));
+      tabela.put("const", new Simbolo(CONSTANTE, "const"));
       tabela.put("id", new Simbolo(IDENTIFICADOR, "id"));
     }
 
