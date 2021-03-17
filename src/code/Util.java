@@ -1,12 +1,12 @@
 /**
 * Trabalho de compiladores - Util
 * Professor: Alexei Machado
-* 
+*
 * @author Ana Flavia
 * @author Jorge Luiz
 * @author Stefany Gaspar
 *
-* Classe Util 
+* Classe Util
 *
 */
 
@@ -46,7 +46,7 @@ public class Util{
     public static char cursorInicio = 13;
     public static char fimDeArquivo = 65535;
     public static char espaco = 32;
-    
+
     /**
      * Metodo para verificar se eh letra
      * @param caracter caracter que sera avaliado
@@ -73,7 +73,20 @@ public class Util{
     public static boolean EhHexadecimal(char caracter) {
         return caracter >= 'A' && caracter <= 'F';
     }
-    
+
+    /**
+     * Metodo para verificar se eh caracter especial
+     * '.' , ',', ';', '(', ')', '[', ']', '{', '}', '+', '-', '%', '@', '!', '?', '=', '*'
+     * @param caracter caracter que sera avaliado
+     * @return boolean
+     */
+    public static boolean EhEspecial(char caracter) {
+        return caracter == pontoFinal || caracter == virgula || caracter == pontoEVirgula || caracter == abreParenteses ||
+               caracter == fechaParenteses || caracter == abreColchetes || caracter == fechaColchetes || caracter == abreChaves ||
+               caracter == fechaChaves || caracter == mais || caracter == menos || caracter == porcentagem || caracter == arroba ||
+               caracter == esclamacao || caracter == interrogacao || caracter == igual || caracter == asterisco;
+    }
+
     /**
      * Metodo para verificar se eh caracter especial
      * @param caracter caracter que sera avaliado
@@ -90,7 +103,7 @@ public class Util{
     /**
      * Metodo para verificar se eh caracter especial e token
      * @param c caracter que sera avaliado
-     * @return boolean 
+     * @return boolean
      */
     public static boolean EhCaracterEspecialEToken(char caracter) {
         return caracter == sublinhado || caracter == pontoFinal || caracter == virgula || caracter == pontoEVirgula ||
@@ -102,16 +115,16 @@ public class Util{
     /**
      * Metodo para verificar se eh quebra de linhas
      * @param caracter caracter que sera avaliado
-     * @return boolean 
+     * @return boolean
      */
     public static boolean EhQuebraDeLinha(char caracter) {
         return caracter == barraN || caracter == novalinha || caracter == cursorInicio || caracter == espaco;
-    }        
+    }
 
     /**
      * Metodo para verificar se eh caracter valido
      * @param caracter caracter que sera avaliado
-     * @return boolean 
+     * @return boolean
      */
     public static boolean EhCaracterValido(char caracter) {
         return ( EhLetra(caracter) || EhDigito(caracter) || EhCaracterEspecial(caracter));

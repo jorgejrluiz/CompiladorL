@@ -28,22 +28,27 @@ Letra > letra, digito, sublinhado > ≠letra, ≠digito, ≠sublinhado
 Pode começar com _ > letra, digito
 
 Hexadecimal: 0DDh
-	0 > 0...9, A...F > 0...9, A...F > h
+	0 > 0...9, A...F > 0...9, A...F > h 
 	
 Numero:
 	1...9 > 0...9 > ≠0...9
+	0 > 0..9 > 0 0 0 0 = 0
+	  > A..F > 0 = 
 	
 Comentarios: /**/
 	/ > ir direto
 	/ > * > ≠* > * > * > ≠*, ≠/ > /
 
-String:
+String: Constantes que representam strings são delimitadas por aspas e não devem conter aspas, quebra de linha ou $. Entretanto, esses caracteres são permitidos nos vetores de caracteres.
 	aspas > letra, digito, ≠'\n', ≠$ > aspas
-	apóstrofo > 
+	apóstrofo > letra, digito, '\n', $ > apóstrofo
 
 DELIMITADORES:
 A quebra de linha e o espaço podem ser usados livremente como delimitadores de lexemas.
 
+DEVOLVE:
+	0ABh
+	=
 
 Dúvidas:
 	Quebra de linha: (bytes 0Dh e 0Ah)?
