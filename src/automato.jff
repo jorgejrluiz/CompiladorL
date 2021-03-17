@@ -77,17 +77,10 @@
 			<y>532.0</y>
 		</state>
 		<state id="18" name="q15">
-			<x>1039.0</x>
-			<y>488.0</y>
+			<x>1035.0</x>
+			<y>492.0</y>
 		</state>
 		<!--The list of transitions.-->
-		<transition>
-			<from>4</from>
-			<to>1</to>
-			<controlx>831</controlx>
-			<controly>466</controly>
-			<read>'=',  ≠'=', devolve</read>
-		</transition>
 		<transition>
 			<from>18</from>
 			<to>18</to>
@@ -103,18 +96,16 @@
 			<read>0...9</read>
 		</transition>
 		<transition>
-			<from>7</from>
+			<from>4</from>
 			<to>1</to>
-			<controlx>925</controlx>
-			<controly>464</controly>
-			<read>≠0...9, devolve</read>
+			<controlx>831</controlx>
+			<controly>466</controly>
+			<read>'=',  ≠'=', devolve</read>
 		</transition>
 		<transition>
-			<from>0</from>
-			<to>6</to>
-			<controlx>677</controlx>
-			<controly>575</controly>
-			<read>0</read>
+			<from>6</from>
+			<to>8</to>
+			<read>A...F</read>
 		</transition>
 		<transition>
 			<from>0</from>
@@ -131,99 +122,18 @@
 			<read>letra, digito, sublinhado</read>
 		</transition>
 		<transition>
-			<from>5</from>
-			<to>1</to>
-			<controlx>1043</controlx>
-			<controly>174</controly>
-			<read>≠letra, ≠digito, ≠sublinhado, devolve</read>
+			<from>12</from>
+			<to>0</to>
+			<controlx>613</controlx>
+			<controly>342</controly>
+			<read>'/'</read>
 		</transition>
 		<transition>
 			<from>0</from>
-			<to>14</to>
-			<controlx>562</controlx>
-			<controly>328</controly>
-			<read>sublinhado</read>
-		</transition>
-		<transition>
-			<from>11</from>
-			<to>11</to>
-			<controlx>774</controlx>
-			<controly>195</controly>
-			<read>≠*</read>
-		</transition>
-		<transition>
-			<from>14</from>
-			<to>14</to>
-			<controlx>596</controlx>
-			<controly>232</controly>
-			<read>sublinhado</read>
-		</transition>
-		<transition>
-			<from>9</from>
-			<to>16</to>
-			<read>0...9</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>3</to>
-			<controlx>615</controlx>
-			<controly>466</controly>
-			<read>'&lt;'</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>4</to>
-			<controlx>638</controlx>
-			<controly>505</controly>
-			<read>'&gt;'</read>
-		</transition>
-		<transition>
-			<from>6</from>
-			<to>9</to>
-			<read>0...9</read>
-		</transition>
-		<transition>
-			<from>15</from>
-			<to>1</to>
-			<controlx>1047</controlx>
-			<controly>332</controly>
-			<read>apóstrofo</read>
-		</transition>
-		<transition>
-			<from>15</from>
-			<to>15</to>
-			<controlx>917</controlx>
-			<controly>289</controly>
-			<read>letra, digito, aspas, '\n', $</read>
-		</transition>
-		<transition>
-			<from>13</from>
-			<to>1</to>
-			<read>aspas</read>
-		</transition>
-		<transition>
-			<from>6</from>
-			<to>8</to>
-			<read>A...F</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>1</to>
-			<controlx>811</controlx>
-			<controly>393</controly>
-			<read>'.' , ',', ';', '(', ')', '[', ']', '{', '}', '+', '-', '%', '@', '!', '?', '=', '*'</read>
-		</transition>
-		<transition>
-			<from>18</from>
-			<to>1</to>
-			<read>≠0...9, devolve</read>
-		</transition>
-		<transition>
-			<from>3</from>
-			<to>1</to>
-			<controlx>750</controlx>
-			<controly>465</controly>
-			<read>'&gt;', '=', ≠'&gt;', ≠'=', devolve</read>
+			<to>2</to>
+			<controlx>603</controlx>
+			<controly>434</controly>
+			<read>':'</read>
 		</transition>
 		<transition>
 			<from>14</from>
@@ -233,49 +143,25 @@
 			<read>letra, digito</read>
 		</transition>
 		<transition>
-			<from>10</from>
-			<to>1</to>
-			<controlx>1021</controlx>
-			<controly>213</controly>
-			<read>≠*, devolve</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>0</to>
-			<controlx>499</controlx>
-			<controly>361</controly>
-			<read>espaço</read>
-		</transition>
-		<transition>
-			<from>10</from>
+			<from>11</from>
 			<to>11</to>
-			<controlx>832</controlx>
-			<controly>209</controly>
-			<read>*</read>
+			<controlx>774</controlx>
+			<controly>195</controly>
+			<read>≠*</read>
 		</transition>
 		<transition>
-			<from>12</from>
-			<to>0</to>
-			<controlx>613</controlx>
-			<controly>342</controly>
-			<read>'/'</read>
-		</transition>
-		<transition>
-			<from>16</from>
+			<from>18</from>
 			<to>1</to>
-			<read>'h'</read>
+			<controlx>1091</controlx>
+			<controly>423</controly>
+			<read>≠0...9, devolve</read>
 		</transition>
 		<transition>
-			<from>16</from>
-			<to>18</to>
-			<read>0...9</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>13</to>
-			<controlx>734</controlx>
-			<controly>329</controly>
-			<read>aspas</read>
+			<from>14</from>
+			<to>14</to>
+			<controlx>596</controlx>
+			<controly>232</controly>
+			<read>sublinhado</read>
 		</transition>
 		<transition>
 			<from>0</from>
@@ -285,21 +171,80 @@
 			<read>apóstrofo</read>
 		</transition>
 		<transition>
+			<from>10</from>
+			<to>1</to>
+			<controlx>1021</controlx>
+			<controly>213</controly>
+			<read>≠*, devolve</read>
+		</transition>
+		<transition>
 			<from>9</from>
 			<to>17</to>
 			<read>A...F</read>
 		</transition>
 		<transition>
-			<from>12</from>
-			<to>12</to>
-			<controlx>671</controlx>
-			<controly>250</controly>
+			<from>15</from>
+			<to>15</to>
+			<controlx>917</controlx>
+			<controly>289</controly>
+			<read>letra, digito, aspas, '\n', $</read>
+		</transition>
+		<transition>
+			<from>10</from>
+			<to>11</to>
+			<controlx>832</controlx>
+			<controly>209</controly>
 			<read>*</read>
 		</transition>
 		<transition>
-			<from>12</from>
-			<to>11</to>
-			<read>≠*, ≠'/'</read>
+			<from>15</from>
+			<to>1</to>
+			<controlx>1047</controlx>
+			<controly>332</controly>
+			<read>apóstrofo</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>6</to>
+			<controlx>677</controlx>
+			<controly>575</controly>
+			<read>0</read>
+		</transition>
+		<transition>
+			<from>16</from>
+			<to>1</to>
+			<controlx>1045</controlx>
+			<controly>430</controly>
+			<read>'h'</read>
+		</transition>
+		<transition>
+			<from>16</from>
+			<to>18</to>
+			<read>0...9</read>
+		</transition>
+		<transition>
+			<from>6</from>
+			<to>1</to>
+			<controlx>893</controlx>
+			<controly>499</controly>
+			<read>≠0...9, ≠A...F, devolve</read>
+		</transition>
+		<transition>
+			<from>9</from>
+			<to>16</to>
+			<read>0...9</read>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>12</to>
+			<read>*</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<controlx>499</controlx>
+			<controly>361</controly>
+			<read>espaço</read>
 		</transition>
 		<transition>
 			<from>2</from>
@@ -309,8 +254,52 @@
 			<read>'=',  ≠'=', devolve</read>
 		</transition>
 		<transition>
+			<from>0</from>
+			<to>14</to>
+			<controlx>562</controlx>
+			<controly>328</controly>
+			<read>sublinhado</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>1</to>
+			<controlx>811</controlx>
+			<controly>393</controly>
+			<read>'.' , ',', ';', '(', ')', '[', ']', '{', '}', '+', '-', '%', '@', '!', '?', '=', '*'</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>3</to>
+			<controlx>615</controlx>
+			<controly>466</controly>
+			<read>'&lt;'</read>
+		</transition>
+		<transition>
+			<from>12</from>
+			<to>12</to>
+			<controlx>671</controlx>
+			<controly>250</controly>
+			<read>*</read>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>1</to>
+			<controlx>750</controlx>
+			<controly>465</controly>
+			<read>'&gt;', '=', ≠'&gt;', ≠'=', devolve</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>4</to>
+			<controlx>638</controlx>
+			<controly>505</controly>
+			<read>'&gt;'</read>
+		</transition>
+		<transition>
 			<from>17</from>
 			<to>1</to>
+			<controlx>1112</controlx>
+			<controly>447</controly>
 			<read>'h'</read>
 		</transition>
 		<transition>
@@ -321,13 +310,6 @@
 			<read>letra, digito, ≠'\n', ≠$</read>
 		</transition>
 		<transition>
-			<from>8</from>
-			<to>17</to>
-			<controlx>946</controlx>
-			<controly>567</controly>
-			<read>0...9, A...F</read>
-		</transition>
-		<transition>
 			<from>0</from>
 			<to>7</to>
 			<controlx>645</controlx>
@@ -335,9 +317,18 @@
 			<read>1...9</read>
 		</transition>
 		<transition>
-			<from>11</from>
-			<to>12</to>
-			<read>*</read>
+			<from>0</from>
+			<to>13</to>
+			<controlx>734</controlx>
+			<controly>329</controly>
+			<read>aspas</read>
+		</transition>
+		<transition>
+			<from>8</from>
+			<to>17</to>
+			<controlx>946</controlx>
+			<controly>567</controly>
+			<read>0...9, A...F</read>
 		</transition>
 		<transition>
 			<from>0</from>
@@ -347,18 +338,33 @@
 			<read>'/'</read>
 		</transition>
 		<transition>
-			<from>6</from>
+			<from>5</from>
 			<to>1</to>
-			<controlx>950</controlx>
-			<controly>473</controly>
-			<read>≠0...9, ≠A...F</read>
+			<controlx>1043</controlx>
+			<controly>174</controly>
+			<read>≠letra, ≠digito, ≠sublinhado, devolve</read>
 		</transition>
 		<transition>
-			<from>0</from>
-			<to>2</to>
-			<controlx>603</controlx>
-			<controly>434</controly>
-			<read>':'</read>
+			<from>12</from>
+			<to>11</to>
+			<read>≠*, ≠'/'</read>
+		</transition>
+		<transition>
+			<from>7</from>
+			<to>1</to>
+			<controlx>925</controlx>
+			<controly>464</controly>
+			<read>≠0...9, devolve</read>
+		</transition>
+		<transition>
+			<from>13</from>
+			<to>1</to>
+			<read>aspas</read>
+		</transition>
+		<transition>
+			<from>6</from>
+			<to>9</to>
+			<read>0...9</read>
 		</transition>
 	</automaton>
 </structure>

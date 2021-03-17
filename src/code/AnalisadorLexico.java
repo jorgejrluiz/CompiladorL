@@ -55,6 +55,39 @@ public class AnalisadorLexico{
                     estadoAtual = Estado1();
                 case 2:
                     estadoAtual = Estado2();
+                case 3:
+                    estadoAtual = Estado3():
+                case 4:
+                    estadoAtual = Estado4();
+                case 5:
+                    estadoAtual = Estado5();
+                case 6:
+                    estadoAtual = Estado6():
+                case 7:
+                    estadoAtual = Estado7();
+                case 8:
+                    estadoAtual = Estado8();
+                case 9:
+                    estadoAtual = Estado9():
+                case 10:
+                    estadoAtual = Estado10();
+                case 11:
+                    estadoAtual = Estado11();
+                case 12:
+                    estadoAtual = Estado12():
+                case 13:
+                    estadoAtual = Estado13();
+                case 14:
+                    estadoAtual = Estado14();
+                case 15:
+                    estadoAtual = Estado15():
+                case 16:
+                    estadoAtual = Estado16();
+                case 17:
+                    estadoAtual = Estado17();
+                case 18:
+                    estadoAtual = Estado18();
+                    //final
                 default:
                     break;
               }
@@ -301,6 +334,102 @@ public class AnalisadorLexico{
         }
         MostrarErro(caracter);
         return 18;
+    }
+
+    /* Mapa do Estado 7
+     * se letra, digito, aspas, \n ou $ volta para 7
+     * se apostofro vai para 18
+     */
+    public int Estado7(){
+      char caracter = LerCaracter();
+
+    }
+
+    /* Mapa do Estado 8
+     * se = vai para 18
+     * se diferente de = devolve e vai para 18
+     */
+    public int Estado8(){
+      char caracter = LerCaracter();
+
+    }
+
+    /* Mapa do Estado 9
+     * se > ou = vai para 18
+     * se diferente de > ou diferente de = devolve e vai para 18
+     */
+    public int Estado9(){
+      char caracter = LerCaracter();
+
+    }
+
+    /* Mapa do Estado 10
+     * se = vai para 18
+     * se diferente de = devolve e vai para 18
+     */
+    public int Estado10(){
+      char caracter = LerCaracter();
+
+    }
+
+    /* Mapa do Estado 11
+     * se diferente de digito devolve e vai para 18
+     */
+    public int Estado11(){
+      char caracter = LerCaracter();
+
+    }
+
+    /* Mapa do Estado 12
+     * se diferente de digito, ou diferente de A...F devolve e vai para 18
+     * se digito vai para 13
+     * se A...F vai para 16
+     */
+    public int Estado12(){
+      char caracter = LerCaracter();
+
+    }
+
+    /* Mapa do Estado 13
+     * se digito vai para 14
+     * se A...F vai para 17
+     */
+    public int Estado13(){
+      char caracter = LerCaracter();
+
+    }
+
+    /* Mapa do Estado 14
+     * se 'h' vai para 18
+     * se digito vai para 15
+     */
+    public int Estado14(){
+      char caracter = LerCaracter();
+
+    }
+
+    /* Mapa do Estado 15
+     * diferente de digito devolve e vai para 18
+     */
+    public int Estado15(){
+      char caracter = LerCaracter();
+
+    }
+
+    /* Mapa do Estado 16
+     * se digito, ou se A...F vai para 17
+     */
+    public int Estado16(){
+      char caracter = LerCaracter();
+
+    }
+
+    /* Mapa do Estado 17
+     * se 'h' vai para 18
+     */
+    public int Estado17(){
+      char caracter = LerCaracter();
+
     }
 
 }
