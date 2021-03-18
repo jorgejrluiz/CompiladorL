@@ -257,7 +257,6 @@ public class AnalisadorLexico{
             MostrarTransicao(caracter, 2, 2);
             return 2;
         } else if(Util.EhCaracterValido(caracter)) {
-            lexema += caracter;
             MostrarTransicao(caracter, 2, 18);
             devolve = true;
             return 18;
@@ -307,14 +306,13 @@ public class AnalisadorLexico{
     public int Estado5() {
         char caracter = LerCaracter();
 
-        if(caracter != Util.asterisco){
+        if(caracter == Util.asterisco){
+            MostrarTransicao(caracter, 5, 4);
+            return 4;
+        } else if(caracter != Util.asterisco){
             MostrarTransicao(caracter, 5, 18);
             devolve = true;
             return 18;
-        } else if(caracter == Util.asterisco){
-            MostrarTransicao(caracter, 5, 4);
-            return 4;
-        }
         MostrarErro(caracter);
         return 18;
     }
@@ -369,7 +367,6 @@ public class AnalisadorLexico{
           MostrarTransicao(caracter, 8, 18);
           return 18;
       } else if(Util.EhCaracterValido(caracter)) {
-          //lexema += caracter;
           MostrarTransicao(caracter, 8, 18);
           devolve = true;
           return 18;
@@ -391,7 +388,6 @@ public class AnalisadorLexico{
           MostrarTransicao(caracter, 9, 18);
           return 18;
       } else if(Util.EhCaracterValido(caracter)) {
-          //lexema += caracter;
           MostrarTransicao(caracter, 9, 18);
           devolve = true;
           return 18;
@@ -412,7 +408,6 @@ public class AnalisadorLexico{
           MostrarTransicao(caracter, 10, 18);
           return 18;
       } else if(Util.EhCaracterValido(caracter)) {
-          //lexema += caracter;
           MostrarTransicao(caracter, 10, 18);
           devolve = true;
           return 18;
@@ -433,7 +428,6 @@ public class AnalisadorLexico{
           MostrarTransicao(caracter, 11, 11);
           return 11;
       } else if(Util.EhCaracterValido(caracter)) {
-          //lexema += caracter;
           MostrarTransicao(caracter, 11, 18);
           devolve = true;
           return 18;
@@ -459,7 +453,6 @@ public class AnalisadorLexico{
           MostrarTransicao(caracter, 12, 16);
           return 16;
       } else if(Util.EhCaracterValido(caracter)) {
-          //lexema += caracter;
           MostrarTransicao(caracter, 12, 18);
           devolve = true;
           return 18;
@@ -519,7 +512,6 @@ public class AnalisadorLexico{
           MostrarTransicao(caracter, 15, 15);
           return 15;
       } else if(Util.EhCaracterValido(caracter)) {
-          //lexema += caracter;
           MostrarTransicao(caracter, 15, 18);
           devolve = true;
           return 18;
@@ -553,7 +545,7 @@ public class AnalisadorLexico{
           lexema += caracter;
           MostrarTransicao(caracter, 17, 18);
           return 18;
-      } 
+      }
       MostrarErro(caracter);
       return 18;
     }
