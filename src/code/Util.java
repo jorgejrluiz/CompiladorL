@@ -118,7 +118,7 @@ public class Util{
      * @return boolean
      */
     public static boolean EhQuebraDeLinha(char caracter) {
-        return caracter == barraN || caracter == novalinha || caracter == cursorInicio || caracter == espaco;
+        return caracter == barraN || caracter == novalinha || caracter == cursorInicio;// || caracter == espaco;
     }
 
     /**
