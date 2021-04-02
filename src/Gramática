@@ -1,15 +1,31 @@
 //Declarações main Bloco_de_Comandos fim_arquivo 
 // C -> Comandos de atribuição | Comandos de repetição | Comandos de teste
 
-S -> D main "{" B "}"
-D -> T id [, id] | = valor
-constEscalares -> final D
-B -> {C ";"}
-C -> (id | id"["Exp"]") := Exp | for "(" {C}";" boolean ";" {C}";" ")" [ "{" C+ "}" ] 
-T -> int | boolean | char
-boolean -> TRUE | FALSE
+// Declaração de variáveis:
+id [= valor]
+valor -> [ + | - ] inteiro | constante hexadecimal ou alfanumérica | TRUE |  FALSE
 
+// Declaração de constantes escalares:
+
+final id = valor;
+
+Gramática:
+
+S -> {D} main "{" C "}"
+D -> T X ; D | final id = V; D
+X -> id([ = V ] | [ "["num"]"] ) | id([ = V ] | ["["num"]"]), X
+T -> int | boolean | char
+V -> [ + | - ] num | char | hexadecimal | TRUE |  FALSE
+
+C -> {(id | id"["Exp"]") := Exp; | 
+      for "(" {C}; Exp ; {C}; ")" [ "{" C+ "}" ] |
+      if "(" Exp ")" then (C[;] |'{'{C}'}') [else (C[;] |'{'{C}'}')] |
+      readln ("("id")" | "(" id "[" Exp "]" ")") ; |
+      write "("G")" ; |
+      writeln "("G")" ; }
+     
+G -> Exp | Exp, G
 Exp -> ExpS [{ = | <> | < | > | <= | >= } ExpS]
-ExpS -> [ + | - ] T {(+ | - | or) T}
-T -> F {( * | / | % | and ) F}
-F -> not F | "(" Exp ")" | constante | id ["["Exp"]"]
+ExpS -> [ + | - ] Termo {(+ | - | or) Termo}
+Termo -> Fator {( * | / | % | and ) Fator}
+Fator -> not Fator | "(" Exp ")" | constante | id ["["Exp"]"]
