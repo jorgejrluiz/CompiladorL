@@ -49,8 +49,3 @@ A quebra de linha e o espaço podem ser usados livremente como delimitadores de 
 DEVOLVE:
 	0ABh
 	=
-
-Dúvidas:
-	Quebra de linha: (bytes 0Dh e 0Ah)?
-	Constantes em formato alfanumérico são da forma ‘c’ onde c é um caractere imprimível.?
-	apóstrofo?

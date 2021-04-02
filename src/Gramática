@@ -1,0 +1,15 @@
+//Declarações main Bloco_de_Comandos fim_arquivo 
+// C -> Comandos de atribuição | Comandos de repetição | Comandos de teste
+
+S -> D main "{" B "}"
+D -> T id [, id] | = valor
+constEscalares -> final D
+B -> {C ";"}
+C -> (id | id"["Exp"]") := Exp | for "(" {C}";" boolean ";" {C}";" ")" [ "{" C+ "}" ] 
+T -> int | boolean | char
+boolean -> TRUE | FALSE
+
+Exp -> ExpS [{ = | <> | < | > | <= | >= } ExpS]
+ExpS -> [ + | - ] T {(+ | - | or) T}
+T -> F {( * | / | % | and ) F}
+F -> not F | "(" Exp ")" | constante | id ["["Exp"]"]
