@@ -8,24 +8,32 @@ valor -> [ + | - ] inteiro | constante hexadecimal ou alfanumérica | TRUE |  FA
 // Declaração de constantes escalares:
 
 final id = valor;
+D -> Declaração
+T -> Tipo
+V -> Valor
+C -> Comandos
 
 Gramática:
 
-S -> {D} main "{" C "}"
-D -> T X ; D | final id = V; D
-X -> id([ = V ] | [ "["num"]"] ) | id([ = V ] | ["["num"]"]), X
-T -> int | boolean | char
-V -> [ + | - ] num | char | hexadecimal | TRUE |  FALSE
+S -> {D} main "{" {C} "}"
+D -> T X ; | final id = V;
 
-C -> {(id | id"["Exp"]") := Exp; | 
-      for "(" {C}; Exp ; {C}; ")" [ "{" C+ "}" ] |
-      if "(" Exp ")" then (C[;] |'{'{C}'}') [else (C[;] |'{'{C}'}')] |
-      readln ("("id")" | "(" id "[" Exp "]" ")") ; |
-      write "("G")" ; |
-      writeln "("G")" ; }
-     
-G -> Exp | Exp, G
+X -> { id ([ = V ] | "["constante"]" ) [,] }+
+T -> int | boolean | char 
+V -> [ + | - ] constante
+
+C ->  id [ "["Exp"]" ] := Exp; | 
+      for "(" {J}; Exp; {J}; ")" ( C | "{" {C}+ "}" ) |
+      if "(" Exp ")" then (C |"{"{C}"}") [else (C |"{"{C}"}")] |
+      readln "(" id [ "[" Exp "]" ] ")"; |
+      write "(" {A}+ ")" ; |
+      writeln "(" {A}+ ")" ; |
+      ;
+
+J -> C [,] 
+A -> Exp [,]
 Exp -> ExpS [{ = | <> | < | > | <= | >= } ExpS]
 ExpS -> [ + | - ] Termo {(+ | - | or) Termo}
-Termo -> Fator {( * | / | % | and ) Fator}
-Fator -> not Fator | "(" Exp ")" | constante | id ["["Exp"]"]
+Termo -> F {( * | / | % | and ) F}
+F -> not F | "(" Exp ")" | constante | id ["["Exp"]"]
+
