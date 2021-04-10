@@ -50,44 +50,43 @@ public class AnalisadorLexico{
         while(estadoAtual != estadoFinal){
             switch (estadoAtual) {
                 case 0:
-                    estadoAtual = Estado0():
+                    estadoAtual = Estado0();
                 case 1:
                     estadoAtual = Estado1();
                 case 2:
                     estadoAtual = Estado2();
                 case 3:
-                    estadoAtual = Estado3():
+                    estadoAtual = Estado3();
                 case 4:
                     estadoAtual = Estado4();
                 case 5:
                     estadoAtual = Estado5();
                 case 6:
-                    estadoAtual = Estado6():
+                    estadoAtual = Estado6();
                 case 7:
                     estadoAtual = Estado7();
                 case 8:
                     estadoAtual = Estado8();
                 case 9:
-                    estadoAtual = Estado9():
+                    estadoAtual = Estado9();
                 case 10:
                     estadoAtual = Estado10();
                 case 11:
                     estadoAtual = Estado11();
                 case 12:
-                    estadoAtual = Estado12():
+                    estadoAtual = Estado12();
                 case 13:
                     estadoAtual = Estado13();
                 case 14:
                     estadoAtual = Estado14();
                 case 15:
-                    estadoAtual = Estado15():
+                    estadoAtual = Estado15();
                 case 16:
                     estadoAtual = Estado16();
                 case 17:
                     estadoAtual = Estado17();
                 case 18:
-                    estadoAtual = Estado18();
-                    //final
+                    break;
                 default:
                     break;
               }
@@ -313,6 +312,7 @@ public class AnalisadorLexico{
             MostrarTransicao(caracter, 5, 18);
             devolve = true;
             return 18;
+        } 
         MostrarErro(caracter);
         return 18;
     }
@@ -383,11 +383,11 @@ public class AnalisadorLexico{
     public int Estado9(){
       char caracter = LerCaracter();
 
-      if(caracter == Util.maior || Util.igual)){
+      if(caracter == Util.maior || caracter == Util.igual){
           lexema += caracter;
           MostrarTransicao(caracter, 9, 18);
           return 18;
-      } else if(Util.EhCaracterValido(caracter)) {
+        }  else if(Util.EhCaracterValido(caracter)) {
           MostrarTransicao(caracter, 9, 18);
           devolve = true;
           return 18;
@@ -403,15 +403,15 @@ public class AnalisadorLexico{
     public int Estado10(){
       char caracter = LerCaracter();
 
-      if(Util.igual)){
+        if(caracter == Util.igual){
           lexema += caracter;
           MostrarTransicao(caracter, 10, 18);
           return 18;
-      } else if(Util.EhCaracterValido(caracter)) {
+        } else if(Util.EhCaracterValido(caracter)) {
           MostrarTransicao(caracter, 10, 18);
           devolve = true;
           return 18;
-      }
+        }
       MostrarErro(caracter);
       return 18;
     }
