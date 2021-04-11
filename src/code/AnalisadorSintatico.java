@@ -148,7 +148,89 @@ public class AnalisadorSintatico {
      *       ;
      */
      public void C() {
+       if(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
+          CasaToken(this.tabelasimbolos.IDENTIFICADOR);
 
+          if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+            CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+            Exp();
+            CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+          }
+          CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
+          Exp();
+          CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+
+       } else if(this.simbolo.token == this.tabelasimbolos.FOR){
+         CasaToken(this.tabelasimbolos.this.tabelasimbolos.FOR);
+         CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
+         J();
+         CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+         Exp();
+         CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+         J();
+         CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+         CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
+         if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTA){
+           CasaToken(this.tabelasimbolos.CHAVES_ABERTA);
+           C();
+           CasaToken(this.tabelasimbolos.CHAVES_FECHADA);
+         } else {
+           C();
+         }
+
+       } else if(this.simbolo.token == this.tabelasimbolos.IF){
+         CasaToken(this.tabelasimbolos.this.tabelasimbolos.IF);
+         CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
+         Exp();
+         CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
+         CasaToken(this.tabelasimbolos.THEN);
+         if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTA){
+           CasaToken(this.tabelasimbolos.CHAVES_ABERTA);
+           C();
+           CasaToken(this.tabelasimbolos.CHAVES_FECHADA);
+         } else {
+           C();
+         }
+         if(this.simbolo.token == this.tabelasimbolos.ELSE){
+           CasaToken(this.tabelasimbolos.ELSE);
+           if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTA){
+             CasaToken(this.tabelasimbolos.CHAVES_ABERTA);
+             C();
+             CasaToken(this.tabelasimbolos.CHAVES_FECHADA);
+           } else {
+             C();
+           }
+         }
+
+       } else if(this.simbolo.token == this.tabelasimbolos.READLN){
+         CasaToken(this.tabelasimbolos.this.tabelasimbolos.READLN);
+         CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
+         CasaToken(this.tabelasimbolos.IDENTIFICADOR);
+         if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+           CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+           Exp();
+           CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+         }
+         CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
+         CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+       } else if(this.simbolo.token == this.tabelasimbolos.WRITE){
+         CasaToken(this.tabelasimbolos.this.tabelasimbolos.WRITE);
+         CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
+         A();
+         CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
+         CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+
+
+       } else if(this.simbolo.token == this.tabelasimbolos.WRITELN){
+         CasaToken(this.tabelasimbolos.this.tabelasimbolos.WRITELN);
+         CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
+         A();
+         CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
+         CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+
+       } else if(this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA){
+         CasaToken(this.tabelasimbolos.this.tabelasimbolos.PONTO_VIRGULA);
+       }
      }
 
     /**
