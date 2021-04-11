@@ -103,24 +103,29 @@ public class AnalisadorSintatico {
     }
   }
 
+
+  while (this.simbolo.token == this.tabelasimbolos.INT || this.simbolo.token == this.tabelasimbolos.CHAR ||
+  this.simbolo.token == this.tabelasimbolos.FINAL) {
   /*
   * X -> { id ([ = V ] | "["constante"]" ) [,] }+
   */
   public void X() {
-    CasaToken(this.tabelasimbolos.IDENTIFICADOR);
+    while(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
+      CasaToken(this.tabelasimbolos.IDENTIFICADOR);
 
-    if(this.simbolo.token == this.tabelasimbolos.IGUAL){
-      CasaToken(this.tabelasimbolos.IGUAL);
-      V();
-    } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
-      CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
-      CasaToken(this.tabelasimbolos.CONSTANTE);
-      CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+      if(this.simbolo.token == this.tabelasimbolos.IGUAL){
+        CasaToken(this.tabelasimbolos.IGUAL);
+        V();
+      } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+        CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+        CasaToken(this.tabelasimbolos.CONSTANTE);
+        CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+      }
+      if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
+        CasaToken(this.tabelasimbolos.VIRGULA);
+        X();
+      }
     }
-    if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
-      X();
-    }
-
   }
 
   /*
@@ -238,7 +243,9 @@ public class AnalisadorSintatico {
   */
   public void J() {
     C();
-    CasaToken(this.tabelasimbolos.VIRGULA);
+    if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
+      CasaToken(this.tabelasimbolos.VIRGULA);
+    }
   }
 
   /**
@@ -246,7 +253,9 @@ public class AnalisadorSintatico {
   */
   public void A() {
     Exp();
-    CasaToken(this.tabelasimbolos.VIRGULA);
+    if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
+      CasaToken(this.tabelasimbolos.VIRGULA);
+    }
   }
 
   /**
@@ -280,24 +289,24 @@ public class AnalisadorSintatico {
   */
   public void ExpS() {
     if (this.simbolo.token == this.tabelasimbolos.MAIS) {
-            CasaToken(this.tabelasimbolos.MAIS);
+      CasaToken(this.tabelasimbolos.MAIS);
     } else if (this.simbolo.token == this.tabelasimbolos.MENOS) {
-            CasaToken(this.tabelasimbolos.MENOS);
+      CasaToken(this.tabelasimbolos.MENOS);
     }
     Termo();
     while (this.simbolo.token == this.tabelasimbolos.MAIS ||
-           this.simbolo.token == this.tabelasimbolos.MENOS ||
-           this.simbolo.token == this.tabelasimbolos.OR) {
-             if (this.simbolo.token == this.tabelasimbolos.MAIS) {
-                CasaToken(this.tabelasimbolos.MAIS);
-                Termo();
-              } else if (this.simbolo.token == this.tabelasimbolos.MENOS) {
-                CasaToken(this.tabelasimbolos.MENOS);
-                Termo();
-              } else if (this.simbolo.token == this.tabelasimbolos.OR) {
-                CasaToken(this.tabelasimbolos.OR);
-                Termo();
-              }
+    this.simbolo.token == this.tabelasimbolos.MENOS ||
+    this.simbolo.token == this.tabelasimbolos.OR) {
+      if (this.simbolo.token == this.tabelasimbolos.MAIS) {
+        CasaToken(this.tabelasimbolos.MAIS);
+        Termo();
+      } else if (this.simbolo.token == this.tabelasimbolos.MENOS) {
+        CasaToken(this.tabelasimbolos.MENOS);
+        Termo();
+      } else if (this.simbolo.token == this.tabelasimbolos.OR) {
+        CasaToken(this.tabelasimbolos.OR);
+        Termo();
+      }
     }
   }
 
