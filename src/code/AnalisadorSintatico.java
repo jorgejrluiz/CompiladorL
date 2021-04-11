@@ -78,20 +78,48 @@ public class AnalisadorSintatico {
      * D -> T X ; | final id = V;
      */
      public void D() {
-
+        if (this.simbolo.token == this.tabelasimbolos.INT || this.simbolo.token == this.tabelasimbolos.CHAR) {
+          T();
+          CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+        } else {
+          CasaToken(this.tabelasimbolos.FINAL);
+          CasaToken(this.tabelasimbolos.IDENTIFICADOR);
+          CasaToken(this.tabelasimbolos.IGUAL);
+          V();
+          CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+        }
      }
+
+     /*
+      * T -> int | boolean | char
+      */
+      public void T() {
+          if (this.simbolo.token == this.tabelasimbolos.INT){
+            CasaToken(this.tabelasimbolos.INT);
+            X();
+          } else if (this.simbolo.token == this.tabelasimbolos.CHAR){
+            CasaToken(this.tabelasimbolos.CHAR);
+            X();
+          }
+      }
 
     /*
      * X -> { id ([ = V ] | "["constante"]" ) [,] }+
      */
      public void X() {
+        CasaToken(this.tabelasimbolos.IDENTIFICADOR);
 
-     }
-
-    /*
-     * T -> int | boolean | char
-     */
-     public void T() {
+        if(this.simbolo.token == this.tabelasimbolos.IGUAL){
+          CasaToken(this.tabelasimbolos.IGUAL);
+          V();
+        } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+          CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+          CasaToken(this.tabelasimbolos.CONSTANTE);
+          CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+        }
+        if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
+            X();
+        }
 
      }
 
@@ -99,7 +127,15 @@ public class AnalisadorSintatico {
      * V -> [ + | - ] constante
      */
      public void V() {
-
+       if (this.simbolo.token == this.tabelasimbolos.MAIS) {
+           CasaToken(this.tabelasimbolos.MAIS);
+           CasaToken(this.tabelasimbolos.CONSTANTE);
+       } else if (this.simbolo.token == this.tabelasimbolos.MENOS) {
+           CasaToken(this.tabelasimbolos.MENOS);
+           CasaToken(this.tabelasimbolos.CONSTANTE);
+       } else {
+         CasaToken(this.tabelasimbolos.CONSTANTE);
+       }
      }
 
     /**
