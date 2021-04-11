@@ -305,15 +305,42 @@ public class AnalisadorSintatico {
   *Termo -> F {( * | / | % | and ) F}
   */
   public void Termo() {
-
+    F();
+    if(this.simbolo.token == this.tabelasimbolos.ASTERISCO){
+      CasaToken(this.tabelasimbolos.ASTERISCO);
+      F();
+    } else if(this.simbolo.token == this.tabelasimbolos.BARRA){
+      CasaToken(this.tabelasimbolos.BARRA);
+      F();
+    } else if(this.simbolo.token == this.tabelasimbolos.PORCENTAGEM){
+      CasaToken(this.tabelasimbolos.PORCENTAGEM);
+      F();
+    } else if(this.simbolo.token == this.tabelasimbolos.AND){
+      CasaToken(this.tabelasimbolos.AND);
+      F();
+    }
   }
 
   /**
   * F -> not F | "(" Exp ")" | constante | id ["["Exp"]"]
   */
   public void F() {
-
+    if(this.simbolo.token == this.tabelasimbolos.NOT){
+      CasaToken(this.tabelasimbolos.NOT);
+      F();
+    } else if(this.simbolo.token == this.tabelasimbolos.PARENTESES_ABERTO){
+      CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
+      Exp();
+      CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
+    } else if(this.simbolo.token == this.tabelasimbolos.CONSTANTE){
+      CasaToken(this.tabelasimbolos.CONSTANTE);
+    } else if(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
+      CasaToken(this.tabelasimbolos.IDENTIFICADOR);
+      if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+        CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+        Exp();
+        CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+      }
+    }
   }
-
-
 }
