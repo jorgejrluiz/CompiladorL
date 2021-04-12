@@ -25,7 +25,7 @@ public class AnalisadorSintatico {
   *
   */
   public void CasaToken(byte tokenesperado) {
-    //System.out.println("esperado: " + tokenesperado);
+    //System.out.println("esperado: " + tokenesperado + " recebido: " + this.simbolo.token);
     if (this.simbolo.token == tokenesperado) {
       this.simbolo = analisadorlexico.maquinaDeEstados();
     } else {
@@ -35,6 +35,7 @@ public class AnalisadorSintatico {
         System.exit(0);
       } else {
         System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
+        //tabelasimbolos.MostrarTabela();
         System.exit(0);
       }
     }
@@ -168,17 +169,17 @@ public class AnalisadorSintatico {
 
       CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
       Exp();
-      CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-
+      if(this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA){
+        CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+      }
     } else if(this.simbolo.token == this.tabelasimbolos.FOR){
       CasaToken(this.tabelasimbolos.FOR);
       CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
       J();
       //CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
       Exp();
-      //CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+      CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
       J();
-      //CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
       if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTA){
         CasaToken(this.tabelasimbolos.CHAVES_ABERTA);
@@ -249,6 +250,7 @@ public class AnalisadorSintatico {
     C();
     if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
       CasaToken(this.tabelasimbolos.VIRGULA);
+      J();
     }
   }
 
@@ -259,6 +261,7 @@ public class AnalisadorSintatico {
     Exp();
     if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
       CasaToken(this.tabelasimbolos.VIRGULA);
+      A();
     }
   }
 
