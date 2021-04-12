@@ -20,18 +20,18 @@ import java.io.BufferedWriter;
 
 public class LC{
 
-    public static void main(String[]args) throws Exception{
+    public static void main(String[] args) throws Exception{
         try{
+
+
             InputStreamReader isr = new InputStreamReader(System.in, "UTF-8");
             BufferedReader br = new BufferedReader(isr);
-
             TabelaDeSimbolos tabelaSimbolos = new TabelaDeSimbolos();
             AnalisadorSintatico sintatico = new AnalisadorSintatico(br);
-            
             sintatico.S();
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-    
+
 }
