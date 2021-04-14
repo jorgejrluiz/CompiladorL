@@ -89,13 +89,21 @@ public class AnalisadorSintatico {
     if (this.simbolo.token == this.tabelasimbolos.INT || this.simbolo.token == this.tabelasimbolos.CHAR) {
       T();
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-    } else {
+    } else if(this.simbolo.token == this.tabelasimbolos.FINAL) {
       CasaToken(this.tabelasimbolos.FINAL);
       CasaToken(this.tabelasimbolos.IDENTIFICADOR);
       CasaToken(this.tabelasimbolos.IGUAL);
       V();
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-    }
+    } else {
+            if (analisadorlexico.fimDeArquivo) {
+                System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
+                System.exit(0);
+            } else {
+                System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
+                System.exit(0);
+            }
+        }
   }
 
   /*
@@ -112,14 +120,14 @@ public class AnalisadorSintatico {
   }
 
   /*
-  * X -> { id ([ = V ] | "["constante"]" ) [,] }+
+  * X -> { id ([ := V ] | "["constante"]" ) [,] }+
   */
   public void X() {
     while(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
       CasaToken(this.tabelasimbolos.IDENTIFICADOR);
 
-      if(this.simbolo.token == this.tabelasimbolos.IGUAL){
-        CasaToken(this.tabelasimbolos.IGUAL);
+      if(this.simbolo.token == this.tabelasimbolos.DOIS_PONTOS_IGUAL){
+        CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
         V();
       } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
         CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
@@ -240,7 +248,15 @@ public class AnalisadorSintatico {
 
     } else if(this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA){
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-    }
+    } else {
+            if (analisadorlexico.fimDeArquivo) {
+                System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
+                System.exit(0);
+            } else {
+                System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
+                System.exit(0);
+            }
+        }
   }
 
   /**

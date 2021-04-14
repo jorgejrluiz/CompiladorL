@@ -80,11 +80,11 @@ public class Util{
      * @param caracter caracter que sera avaliado
      * @return boolean
      */
-    public static boolean EhEspecial(char caracter) {
+    public static boolean EhTransicaoDireta(char caracter) {
         return caracter == pontoFinal || caracter == virgula || caracter == pontoEVirgula || caracter == abreParenteses ||
                caracter == fechaParenteses || caracter == abreColchetes || caracter == fechaColchetes || caracter == abreChaves ||
                caracter == fechaChaves || caracter == mais || caracter == menos || caracter == porcentagem || caracter == arroba ||
-               caracter == esclamacao || caracter == interrogacao || caracter == igual || caracter == asterisco;
+               caracter == esclamacao || caracter == interrogacao || caracter == igual || caracter == asterisco || caracter == espaco;
     }
 
     /**

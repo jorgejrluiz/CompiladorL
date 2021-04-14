@@ -104,7 +104,7 @@ public class TabelaDeSimbolos{
      * @return Simbolo
      */
     public Simbolo BuscarLexema(String lexema) {
-        return tabela.get(lexema.toLowerCase());
+        return tabela.get(lexema);
     }
 
     public void PrintTabela() {
@@ -121,8 +121,8 @@ public class TabelaDeSimbolos{
      * @return Simbolo simbolo adicionado
      */
     public Simbolo InserirIdentificador(String lexema) {
-        Simbolo simbolo = new Simbolo (IDENTIFICADOR,lexema.toLowerCase());
-        tabela.put(lexema.toLowerCase(),simbolo);
+        Simbolo simbolo = new Simbolo (IDENTIFICADOR,lexema);
+        tabela.put(lexema,simbolo);
         return simbolo;
     }
     /**

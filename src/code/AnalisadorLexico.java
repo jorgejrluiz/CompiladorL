@@ -180,7 +180,7 @@ public class AnalisadorLexico{
 
   public void MostrarTransicao(char caracter, int estadoAtual, int estadoFinal){
     if(debugMode)
-    System.out.println("caracter = " + ">" + caracter + "<" + "valor = "+(int)caracter +" estado atual: "+ estadoAtual + " proximo estado: "+estadoFinal);
+    System.out.println("caracter = " + " >" + caracter + "< " + "valor = "+(int)caracter +" estado atual: "+ estadoAtual + " proximo estado: "+estadoFinal);
   }
 
   /* Mapa do Estado 0
@@ -204,7 +204,7 @@ public class AnalisadorLexico{
     if(caracter == Util.espaco || caracter == Util.cursorInicio){
       MostrarTransicao(caracter, 0, 0);
       return 0;
-    } else if (Util.EhEspecial(caracter)){
+    } else if (Util.EhTransicaoDireta(caracter)){
       lexema += caracter;
       MostrarTransicao(caracter, 0, 18);
       return 18;
@@ -333,8 +333,8 @@ public class AnalisadorLexico{
   }
 
   /* Mapa do Estado 4
-  * diferente de * volta para 4
   * se * vai para 3
+  * diferente de * volta para 4
   */
   public int Estado4() {
     char caracter = LerCaracter();
@@ -342,10 +342,15 @@ public class AnalisadorLexico{
     if(caracter == Util.asterisco){
       MostrarTransicao(caracter, 4, 3);
       return 3;
-    } else {
+    } else if(caracter != Util.asterisco && caracter != Util.fimDeArquivo){
+      if(Util.barraN == caracter || Util.novalinha == caracter) {
+          linha++;
+      }
       MostrarTransicao(caracter, 4, 4);
       return 4;
     }
+    MostrarErro(caracter);
+    return 18;
   }
 
   /* Mapa do Estado 5
@@ -376,7 +381,7 @@ public class AnalisadorLexico{
     if (caracter == Util.aspas) {
       MostrarTransicao(caracter, 6, 18);
       return 18;
-    } else if(caracter != Util.barraN || caracter != Util.cifrao || Util.EhLetra(caracter) || Util.EhDigito(caracter)){
+    } else if(Util.EhLetra(caracter) || Util.EhDigito(caracter) || Util.EhCaracterEspecial(caracter)){
       lexema += caracter;
       MostrarTransicao(caracter, 6, 6);
       return 6;
