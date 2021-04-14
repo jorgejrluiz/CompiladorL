@@ -45,7 +45,7 @@ public class AnalisadorLexico{
   */
   public Simbolo maquinaDeEstados() {
     int estadoAtual = 0;
-    int estadoFinal = 18;
+    int estadoFinal = 19;
 
     while(estadoAtual != estadoFinal){
       switch (estadoAtual) {
@@ -104,6 +104,9 @@ public class AnalisadorLexico{
         estadoAtual = Estado17();
         break;
         case 18:
+        estadoAtual = Estado18();
+        break;
+        case 19:
         break;
         default:
         break;
@@ -169,6 +172,7 @@ public class AnalisadorLexico{
         System.exit(0);
       }else {
         System.out.println(linha);
+        //System.out.println(">"+(int)caracter+"<");
         System.out.println("caractere invalido.");
         System.exit(0);
       }
@@ -185,17 +189,17 @@ public class AnalisadorLexico{
 
   /* Mapa do Estado 0
   * se espaco volta para 0
-  * se '.' , ',', ';', '(', ')', '[', ']', '{', '}', '+', '-', '%', '@', '!', '?', '=', '*' vai para 18
+  * se '.' , ',', ';', '(', ')', '[', ']', '{', '}', '+', '-', '%', '@', '!', '?', '=', '*' vai para 19
   * se sublinhado vai para 1
   * se letra vai para 2
   * se / vai para 5
   * se aspas vai para 6
   * se apostofro vai para 7
-  * se : vai para 8
-  * se < vai para 9
-  * se > vai para 10
-  * se 1...9 vai para 11
-  * se 0 vai para 12
+  * se : vai para 9
+  * se < vai para 10
+  * se > vai para 11
+  * se 1...9 vai para 12
+  * se 0 vai para 13
   */
   public int Estado0() {
     lexema = "";
@@ -206,8 +210,8 @@ public class AnalisadorLexico{
       return 0;
     } else if (Util.EhTransicaoDireta(caracter)){
       lexema += caracter;
-      MostrarTransicao(caracter, 0, 18);
-      return 18;
+      MostrarTransicao(caracter, 0, 19);
+      return 19;
     } else if (caracter == Util.sublinhado){
       lexema += caracter;
       MostrarTransicao(caracter, 0, 1);
@@ -230,24 +234,24 @@ public class AnalisadorLexico{
       return 7;
     } else if(caracter == Util.doisPontos){
       lexema += caracter;
-      MostrarTransicao(caracter, 0, 8);
-      return 8;
-    } else if(caracter == Util.menor){
-      lexema += caracter;
       MostrarTransicao(caracter, 0, 9);
       return 9;
-    } else if(caracter == Util.maior){
+    } else if(caracter == Util.menor){
       lexema += caracter;
       MostrarTransicao(caracter, 0, 10);
       return 10;
-    } else if(caracter != '0' && Util.EhDigito(caracter)){
+    } else if(caracter == Util.maior){
       lexema += caracter;
       MostrarTransicao(caracter, 0, 11);
       return 11;
-    } else if(caracter == '0'){
+    } else if(caracter != '0' && Util.EhDigito(caracter)){
       lexema += caracter;
       MostrarTransicao(caracter, 0, 12);
       return 12;
+    } else if(caracter == '0'){
+      lexema += caracter;
+      MostrarTransicao(caracter, 0, 13);
+      return 13;
     } else if(Util.EhQuebraDeLinha(caracter)) {
       if(Util.barraN == caracter || Util.novalinha == caracter) {
         linha++;
@@ -258,11 +262,11 @@ public class AnalisadorLexico{
         linha--;
       }
       fimDeArquivo = true;
-      return 18;
+      return 19;
     }
 
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 1
@@ -285,12 +289,12 @@ public class AnalisadorLexico{
     System.out.println(caracter);
 
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 2
   * se letra, digito ou sublinhado volta para 2
-  * diferente de letra, digito ou sublinhado devolve e vai para 18
+  * diferente de letra, digito ou sublinhado devolve e vai para 19
   */
   public int Estado2() {
     char caracter = LerCaracter();
@@ -300,13 +304,13 @@ public class AnalisadorLexico{
       MostrarTransicao(caracter, 2, 2);
       return 2;
     } else if(Util.EhCaracterValido(caracter)) {
-      MostrarTransicao(caracter, 2, 18);
+      MostrarTransicao(caracter, 2, 19);
       devolve = true;
-      return 18;
+      return 19;
     }
 
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 3
@@ -329,7 +333,7 @@ public class AnalisadorLexico{
     }
 
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 4
@@ -350,12 +354,12 @@ public class AnalisadorLexico{
       return 4;
     }
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 5
   * se * vai para 4
-  * diferente de * devolve e vai para 18
+  * diferente de * devolve e vai para 19
   */
   public int Estado5() {
     char caracter = LerCaracter();
@@ -363,24 +367,24 @@ public class AnalisadorLexico{
       MostrarTransicao(caracter, 5, 4);
       return 4;
     } else if(caracter != Util.asterisco){
-      MostrarTransicao(caracter, 5, 18);
+      MostrarTransicao(caracter, 5, 19);
       devolve = true;
-      return 18;
+      return 19;
     }
 
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 6
   * se letra, digito, diferente de \n ou diferente de $ volta para 6
-  * se aspas vai para 18
+  * se aspas vai para 19
   */
   public int Estado6() {
     char caracter = LerCaracter();
     if (caracter == Util.aspas) {
-      MostrarTransicao(caracter, 6, 18);
-      return 18;
+      MostrarTransicao(caracter, 6, 19);
+      return 19;
     } else if(Util.EhLetra(caracter) || Util.EhDigito(caracter) || Util.EhCaracterEspecial(caracter)){
       lexema += caracter;
       MostrarTransicao(caracter, 6, 6);
@@ -388,137 +392,122 @@ public class AnalisadorLexico{
     }
     MostrarErro(caracter);
 
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 7
-  * se letra, digito, aspas, \n ou $ volta para 7
-  * se apostofro vai para 18
+  * se letra, digito, aspas, \n ou $ vai para 8
   */
   public int Estado7(){
     char caracter = LerCaracter();
 
     if(Util.EhLetra(caracter) || Util.EhDigito(caracter) || caracter == Util.aspas || caracter == Util.barraN || caracter == Util.cifrao){
       lexema += caracter;
-      MostrarTransicao(caracter, 7, 7);
-      return 7;
-    } else if (caracter == Util.apostofro) {
-      MostrarTransicao(caracter, 7, 18);
-      return 18;
+      MostrarTransicao(caracter, 7, 8);
+      return 8;
     }
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 8
-  * se = vai para 18
-  * se diferente de = devolve e vai para 18
+  * se ''' vai para 19
   */
   public int Estado8(){
     char caracter = LerCaracter();
-
-    if(caracter == Util.igual){
-      lexema += caracter;
-      MostrarTransicao(caracter, 8, 18);
-      return 18;
-    } else if(Util.EhCaracterValido(caracter)) {
-      MostrarTransicao(caracter, 8, 18);
-      devolve = true;
-      return 18;
+    if (caracter == Util.apostofro) {
+      MostrarTransicao(caracter, 8, 19);
+      return 19;
     }
     MostrarErro(caracter);
-    return 18;
-
+    return 19;
   }
 
   /* Mapa do Estado 9
-  * se > ou = vai para 18
-  * se diferente de > ou diferente de = devolve e vai para 18
+  * se = vai para 19
+  * se diferente de = devolve e vai para 19
   */
   public int Estado9(){
     char caracter = LerCaracter();
 
-    if(caracter == Util.maior || caracter == Util.igual){
+    if(caracter == Util.igual){
       lexema += caracter;
-      MostrarTransicao(caracter, 9, 18);
-      return 18;
-    }  else if(Util.EhCaracterValido(caracter)) {
-      MostrarTransicao(caracter, 9, 18);
+      MostrarTransicao(caracter, 9, 19);
+      return 19;
+    } else if(Util.EhCaracterValido(caracter)) {
+      MostrarTransicao(caracter, 9, 19);
       devolve = true;
-      return 18;
+      return 19;
     }
     MostrarErro(caracter);
-    return 18;
+    return 19;
+
   }
 
   /* Mapa do Estado 10
-  * se = vai para 18
-  * se diferente de = devolve e vai para 18
+  * se > ou = vai para 19
+  * se diferente de > ou diferente de = devolve e vai para 19
   */
   public int Estado10(){
     char caracter = LerCaracter();
 
-    if(caracter == Util.igual){
+    if(caracter == Util.maior || caracter == Util.igual){
       lexema += caracter;
-      MostrarTransicao(caracter, 10, 18);
-      return 18;
-    } else if(Util.EhCaracterValido(caracter)) {
-      MostrarTransicao(caracter, 10, 18);
+      MostrarTransicao(caracter, 10, 19);
+      return 19;
+    }  else if(Util.EhCaracterValido(caracter)) {
+      MostrarTransicao(caracter, 10, 19);
       devolve = true;
-      return 18;
+      return 19;
     }
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 11
-  * se digito volta para 11
-  * se diferente de digito devolve e vai para 18
+  * se = vai para 19
+  * se diferente de = devolve e vai para 19
   */
   public int Estado11(){
     char caracter = LerCaracter();
 
-    if(Util.EhDigito(caracter)){
+    if(caracter == Util.igual){
       lexema += caracter;
-      MostrarTransicao(caracter, 11, 11);
-      return 11;
+      MostrarTransicao(caracter, 11, 19);
+      return 19;
     } else if(Util.EhCaracterValido(caracter)) {
-      MostrarTransicao(caracter, 11, 18);
+      MostrarTransicao(caracter, 11, 19);
       devolve = true;
-      return 18;
+      return 19;
     }
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 12
-  * se digito vai para 13
-  * se A...F vai para 16
-  * se diferente de digito, ou diferente de A...F devolve e vai para 18
+  * se digito volta para 12
+  * se diferente de digito devolve e vai para 19
   */
   public int Estado12(){
     char caracter = LerCaracter();
 
     if(Util.EhDigito(caracter)){
       lexema += caracter;
-      MostrarTransicao(caracter, 12, 13);
-      return 13;
-    } else if(Util.EhHexadecimal(caracter)){
-      lexema += caracter;
-      MostrarTransicao(caracter, 12, 16);
-      return 16;
+      MostrarTransicao(caracter, 12, 12);
+      return 12;
     } else if(Util.EhCaracterValido(caracter)) {
-      MostrarTransicao(caracter, 12, 18);
+      MostrarTransicao(caracter, 12, 19);
       devolve = true;
-      return 18;
+      return 19;
     }
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 13
   * se digito vai para 14
   * se A...F vai para 17
+  * se diferente de digito, ou diferente de A...F devolve e vai para 19
   */
   public int Estado13(){
     char caracter = LerCaracter();
@@ -531,78 +520,102 @@ public class AnalisadorLexico{
       lexema += caracter;
       MostrarTransicao(caracter, 13, 17);
       return 17;
+    } else if(Util.EhCaracterValido(caracter)) {
+      MostrarTransicao(caracter, 13, 19);
+      devolve = true;
+      return 19;
     }
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 14
-  * se 'h' vai para 18
   * se digito vai para 15
+  * se A...F vai para 18
   */
   public int Estado14(){
     char caracter = LerCaracter();
 
-    if(caracter == 'h'){
-      lexema += caracter;
-      MostrarTransicao(caracter, 14, 18);
-      return 18;
-    } else if(Util.EhDigito(caracter)){
+    if(Util.EhDigito(caracter)){
       lexema += caracter;
       MostrarTransicao(caracter, 14, 15);
       return 15;
+    } else if(Util.EhHexadecimal(caracter)){
+      lexema += caracter;
+      MostrarTransicao(caracter, 13, 18);
+      return 18;
     }
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 15
-  * diferente de digito devolve e vai para 18
+  * se 'h' vai para 19
+  * se digito vai para 16
   */
   public int Estado15(){
     char caracter = LerCaracter();
 
-    if(Util.EhDigito(caracter)){
+    if(caracter == 'h'){
       lexema += caracter;
-      MostrarTransicao(caracter, 15, 15);
-      return 15;
-    } else if(Util.EhCaracterValido(caracter)) {
-      MostrarTransicao(caracter, 15, 18);
-      devolve = true;
-      return 18;
+      MostrarTransicao(caracter, 15, 19);
+      return 19;
+    } else if(Util.EhDigito(caracter)){
+      lexema += caracter;
+      MostrarTransicao(caracter, 15, 16);
+      return 16;
     }
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 16
-  * se digito, ou se A...F vai para 17
+  * diferente de digito devolve e vai para 19
   */
   public int Estado16(){
     char caracter = LerCaracter();
 
-    if(Util.EhDigito(caracter) || Util.EhHexadecimal(caracter)){
+    if(Util.EhDigito(caracter)){
       lexema += caracter;
-      MostrarTransicao(caracter, 16, 17);
-      return 17;
+      MostrarTransicao(caracter, 16, 16);
+      return 16;
+    } else if(Util.EhCaracterValido(caracter)) {
+      MostrarTransicao(caracter, 16, 19);
+      devolve = true;
+      return 19;
     }
     MostrarErro(caracter);
-    return 18;
+    return 19;
   }
 
   /* Mapa do Estado 17
-  * se 'h' vai para 18
+  * se digito, ou se A...F vai para 18
   */
   public int Estado17(){
     char caracter = LerCaracter();
 
-    if(caracter == 'h'){
+    if(Util.EhDigito(caracter) || Util.EhHexadecimal(caracter)){
       lexema += caracter;
       MostrarTransicao(caracter, 17, 18);
       return 18;
     }
     MostrarErro(caracter);
-    return 18;
+    return 19;
+  }
+
+  /* Mapa do Estado 18
+  * se 'h' vai para 19
+  */
+  public int Estado18(){
+    char caracter = LerCaracter();
+
+    if(caracter == 'h'){
+      lexema += caracter;
+      MostrarTransicao(caracter, 18, 19);
+      return 19;
+    }
+    MostrarErro(caracter);
+    return 19;
   }
 
 }

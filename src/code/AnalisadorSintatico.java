@@ -72,9 +72,6 @@ public class AnalisadorSintatico {
     }
 
     if (analisadorlexico.fimDeArquivo == false) {
-      System.out.println(this.tabelasimbolos.MAIN);
-      System.out.println(this.simbolo.lexema);
-      System.out.println(this.simbolo.token);
       System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
       System.exit(0);
     }
@@ -120,14 +117,14 @@ public class AnalisadorSintatico {
   }
 
   /*
-  * X -> { id ([ := V ] | "["constante"]" ) [,] }+
+  * X -> { id ([ = V ] | "["constante"]" ) [,] }+
   */
   public void X() {
     while(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
       CasaToken(this.tabelasimbolos.IDENTIFICADOR);
 
-      if(this.simbolo.token == this.tabelasimbolos.DOIS_PONTOS_IGUAL){
-        CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
+      if(this.simbolo.token == this.tabelasimbolos.IGUAL){
+        CasaToken(this.tabelasimbolos.IGUAL);
         V();
       } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
         CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
