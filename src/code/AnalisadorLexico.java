@@ -184,7 +184,7 @@ public class AnalisadorLexico{
 
   public void MostrarTransicao(char caracter, int estadoAtual, int estadoFinal){
     if(debugMode)
-    System.out.println("caracter = " + " >" + caracter + "< " + "valor = "+(int)caracter +" estado atual: "+ estadoAtual + " proximo estado: "+estadoFinal);
+    System.out.println("caracter = " + " >" + caracter + "< " + "\tvalor = "+(int)caracter +" \testado atual: "+ estadoAtual + " \tproximo estado: "+estadoFinal);
   }
 
   /* Mapa do Estado 0

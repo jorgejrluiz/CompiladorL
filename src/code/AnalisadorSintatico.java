@@ -7,6 +7,8 @@ public class AnalisadorSintatico {
   Simbolo novoSimbolo = new Simbolo();
   Simbolo simboloAnterior = new Simbolo();
   BufferedReader file;
+  public boolean debugMode = false;
+
 
   /**
   * Construtor da classe
@@ -25,7 +27,9 @@ public class AnalisadorSintatico {
   *
   */
   public void CasaToken(byte tokenesperado) {
-    //System.out.println("esperado: " + tokenesperado + " recebido: " + this.simbolo.token);
+    if(debugMode){
+      System.out.println("esperado: " + tokenesperado + " \trecebido: " + this.simbolo.token + " " + this.simbolo.lexema);
+    }
     if (this.simbolo.token == tokenesperado) {
       this.simbolo = analisadorlexico.maquinaDeEstados();
     } else {
@@ -41,6 +45,11 @@ public class AnalisadorSintatico {
     }
   }
 
+  public void MostrarTransicao(Simbolo simbolo, String estadoAtual, String estadoFinal){
+    if(debugMode)
+    System.out.println("Token: "+ this.simbolo.token + " \tLexema: " + this.simbolo.lexema + " \testado atual: " + estadoAtual + " \tproximo estado: "+estadoFinal);
+  }
+
 
   /**
   * S -> {D} main "{" {C} "}"
@@ -50,6 +59,7 @@ public class AnalisadorSintatico {
     this.simbolo.token == this.tabelasimbolos.FINAL) {
       while (this.simbolo.token == this.tabelasimbolos.INT || this.simbolo.token == this.tabelasimbolos.CHAR ||
       this.simbolo.token == this.tabelasimbolos.FINAL) {
+        MostrarTransicao(this.simbolo, "S", "D");
         D();
       }
     }
@@ -65,6 +75,7 @@ public class AnalisadorSintatico {
         this.simbolo.token == this.tabelasimbolos.IF || this.simbolo.token == this.tabelasimbolos.READLN ||
         this.simbolo.token == this.tabelasimbolos.WRITE || this.simbolo.token == this.tabelasimbolos.WRITELN ||
         this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA) {
+          MostrarTransicao(this.simbolo, "S", "C");
           C();
         }
       }
@@ -84,12 +95,14 @@ public class AnalisadorSintatico {
   */
   public void D() {
     if (this.simbolo.token == this.tabelasimbolos.INT || this.simbolo.token == this.tabelasimbolos.CHAR) {
+      MostrarTransicao(this.simbolo, "D", "T");
       T();
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
     } else if(this.simbolo.token == this.tabelasimbolos.FINAL) {
       CasaToken(this.tabelasimbolos.FINAL);
       CasaToken(this.tabelasimbolos.IDENTIFICADOR);
       CasaToken(this.tabelasimbolos.IGUAL);
+      MostrarTransicao(this.simbolo, "D", "V");
       V();
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
     } else {
@@ -109,9 +122,11 @@ public class AnalisadorSintatico {
   public void T() {
     if (this.simbolo.token == this.tabelasimbolos.INT){
       CasaToken(this.tabelasimbolos.INT);
+      MostrarTransicao(this.simbolo, "T", "X");
       X();
     } else if (this.simbolo.token == this.tabelasimbolos.CHAR){
       CasaToken(this.tabelasimbolos.CHAR);
+      MostrarTransicao(this.simbolo, "T", "X");
       X();
     }
   }
@@ -125,6 +140,7 @@ public class AnalisadorSintatico {
 
       if(this.simbolo.token == this.tabelasimbolos.IGUAL){
         CasaToken(this.tabelasimbolos.IGUAL);
+        MostrarTransicao(this.simbolo, "X", "V");
         V();
       } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
         CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
@@ -133,6 +149,7 @@ public class AnalisadorSintatico {
       }
       if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
         CasaToken(this.tabelasimbolos.VIRGULA);
+        MostrarTransicao(this.simbolo, "X", "X");
         X();
       }
     }
@@ -180,17 +197,23 @@ public class AnalisadorSintatico {
     } else if(this.simbolo.token == this.tabelasimbolos.FOR){
       CasaToken(this.tabelasimbolos.FOR);
       CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
+      MostrarTransicao(this.simbolo, "C", "J");
       J();
       //CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
       Exp();
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+      MostrarTransicao(this.simbolo, "C", "J");
       J();
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
       if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTA){
         CasaToken(this.tabelasimbolos.CHAVES_ABERTA);
-        C();
+        while (this.simbolo.token != this.tabelasimbolos.CHAVES_FECHADA){
+          MostrarTransicao(this.simbolo, "C", "C");
+          C();
+        }
         CasaToken(this.tabelasimbolos.CHAVES_FECHADA);
       } else {
+        MostrarTransicao(this.simbolo, "C", "C");
         C();
       }
 
@@ -202,18 +225,22 @@ public class AnalisadorSintatico {
       CasaToken(this.tabelasimbolos.THEN);
       if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTA){
         CasaToken(this.tabelasimbolos.CHAVES_ABERTA);
+        MostrarTransicao(this.simbolo, "C", "C");
         C();
         CasaToken(this.tabelasimbolos.CHAVES_FECHADA);
       } else {
+        MostrarTransicao(this.simbolo, "C", "C");
         C();
       }
       if(this.simbolo.token == this.tabelasimbolos.ELSE){
         CasaToken(this.tabelasimbolos.ELSE);
         if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTA){
           CasaToken(this.tabelasimbolos.CHAVES_ABERTA);
+          MostrarTransicao(this.simbolo, "C", "C");
           C();
           CasaToken(this.tabelasimbolos.CHAVES_FECHADA);
         } else {
+          MostrarTransicao(this.simbolo, "C", "C");
           C();
         }
       }
@@ -232,6 +259,7 @@ public class AnalisadorSintatico {
     } else if(this.simbolo.token == this.tabelasimbolos.WRITE){
       CasaToken(this.tabelasimbolos.WRITE);
       CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
+      MostrarTransicao(this.simbolo, "C", "A");
       A();
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
@@ -239,6 +267,7 @@ public class AnalisadorSintatico {
     } else if(this.simbolo.token == this.tabelasimbolos.WRITELN){
       CasaToken(this.tabelasimbolos.WRITELN);
       CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
+      MostrarTransicao(this.simbolo, "C", "A");
       A();
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
@@ -260,9 +289,11 @@ public class AnalisadorSintatico {
   * J -> C [,]
   */
   public void J() {
+    MostrarTransicao(this.simbolo, "J", "C");
     C();
     if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
       CasaToken(this.tabelasimbolos.VIRGULA);
+      MostrarTransicao(this.simbolo, "J", "J");
       J();
     }
   }
@@ -274,6 +305,7 @@ public class AnalisadorSintatico {
     Exp();
     if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
       CasaToken(this.tabelasimbolos.VIRGULA);
+      MostrarTransicao(this.simbolo, "A", "A");
       A();
     }
   }
@@ -282,24 +314,31 @@ public class AnalisadorSintatico {
   * Exp -> ExpS [{ = | <> | < | > | <= | >= } ExpS]
   */
   public void Exp() {
+    MostrarTransicao(this.simbolo, "Exp", "ExpS");
     ExpS();
     if(this.simbolo.token == this.tabelasimbolos.IGUAL){
       CasaToken(this.tabelasimbolos.IGUAL);
+      MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
     } else if(this.simbolo.token == this.tabelasimbolos.DIFERENTE){
       CasaToken(this.tabelasimbolos.DIFERENTE);
+      MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
     } else if(this.simbolo.token == this.tabelasimbolos.MENOR){
       CasaToken(this.tabelasimbolos.MENOR);
+      MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
     } else if(this.simbolo.token == this.tabelasimbolos.MAIOR){
       CasaToken(this.tabelasimbolos.MAIOR);
+      MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
     } else if(this.simbolo.token == this.tabelasimbolos.MENOR_IGUAL){
       CasaToken(this.tabelasimbolos.MENOR_IGUAL);
+      MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
     } else if(this.simbolo.token == this.tabelasimbolos.MAIOR_IGUAL){
       CasaToken(this.tabelasimbolos.MAIOR_IGUAL);
+      MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
     }
   }
@@ -313,18 +352,22 @@ public class AnalisadorSintatico {
     } else if (this.simbolo.token == this.tabelasimbolos.MENOS) {
       CasaToken(this.tabelasimbolos.MENOS);
     }
+    MostrarTransicao(this.simbolo, "ExpS", "Termo");
     Termo();
     while (this.simbolo.token == this.tabelasimbolos.MAIS ||
     this.simbolo.token == this.tabelasimbolos.MENOS ||
     this.simbolo.token == this.tabelasimbolos.OR) {
       if (this.simbolo.token == this.tabelasimbolos.MAIS) {
         CasaToken(this.tabelasimbolos.MAIS);
+        MostrarTransicao(this.simbolo, "ExpS", "Termo");
         Termo();
       } else if (this.simbolo.token == this.tabelasimbolos.MENOS) {
         CasaToken(this.tabelasimbolos.MENOS);
+        MostrarTransicao(this.simbolo, "ExpS", "Termo");
         Termo();
       } else if (this.simbolo.token == this.tabelasimbolos.OR) {
         CasaToken(this.tabelasimbolos.OR);
+        MostrarTransicao(this.simbolo, "ExpS", "Termo");
         Termo();
       }
     }
@@ -334,18 +377,23 @@ public class AnalisadorSintatico {
   *Termo -> F {( * | / | % | and ) F}
   */
   public void Termo() {
+    MostrarTransicao(this.simbolo, "Termo", "F");
     F();
     if(this.simbolo.token == this.tabelasimbolos.ASTERISCO){
       CasaToken(this.tabelasimbolos.ASTERISCO);
+      MostrarTransicao(this.simbolo, "Termo", "F");
       F();
     } else if(this.simbolo.token == this.tabelasimbolos.BARRA){
       CasaToken(this.tabelasimbolos.BARRA);
+      MostrarTransicao(this.simbolo, "Termo", "F");
       F();
     } else if(this.simbolo.token == this.tabelasimbolos.PORCENTAGEM){
       CasaToken(this.tabelasimbolos.PORCENTAGEM);
+      MostrarTransicao(this.simbolo, "Termo", "F");
       F();
     } else if(this.simbolo.token == this.tabelasimbolos.AND){
       CasaToken(this.tabelasimbolos.AND);
+      MostrarTransicao(this.simbolo, "Termo", "F");
       F();
     }
   }
@@ -356,9 +404,11 @@ public class AnalisadorSintatico {
   public void F() {
     if(this.simbolo.token == this.tabelasimbolos.NOT){
       CasaToken(this.tabelasimbolos.NOT);
+      MostrarTransicao(this.simbolo, "F", "F");
       F();
     } else if(this.simbolo.token == this.tabelasimbolos.PARENTESES_ABERTO){
       CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
+      MostrarTransicao(this.simbolo, "F", "Exp");
       Exp();
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
     } else if(this.simbolo.token == this.tabelasimbolos.CONSTANTE){
@@ -367,6 +417,7 @@ public class AnalisadorSintatico {
       CasaToken(this.tabelasimbolos.IDENTIFICADOR);
       if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
         CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+        MostrarTransicao(this.simbolo, "F", "Exp");
         Exp();
         CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
       }
