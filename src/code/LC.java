@@ -134,20 +134,20 @@ class AnalisadorLexico{
     }
     if(!fimDeArquivo) {
       if(tabelaDeSimbolos.BuscarLexema(lexema) == null) {
-        //System.out.println("IF");
         if(lexema.charAt(0) == '"' || lexema.charAt(0) == '\'' || Util.EhDigito(lexema.charAt(0))) {
           Simbolo simboloConst = new Simbolo(tabelaDeSimbolos.CONSTANTE, lexema, tipoConst);
           return simboloConst;
         } else {
+          if(debugMode){
+            System.out.println("INSERE O IDENTIFICADOR: >"+ lexema + "<");
+          }
           Simbolo simboloIdentificador = tabelaDeSimbolos.InserirIdentificador(lexema);
           return simboloIdentificador;
         }
       } else {
-        //System.out.println("ELSE1:" + lexema);
         return tabelaDeSimbolos.BuscarLexema(lexema);
       }
     } else {
-      //System.out.println("ELSE2");
       return new Simbolo((byte)38,lexema);
     }
   }
@@ -204,7 +204,7 @@ class AnalisadorLexico{
 
   public void MostrarTransicao(char caracter, int estadoAtual, int estadoFinal){
     if(debugMode)
-    System.out.println("caracter = " + " >" + caracter + "< " + "\tvalor = "+(int)caracter +" \testado atual: "+ estadoAtual + " \tproximo estado: "+estadoFinal);
+    System.out.println("LEXICO: caracter = " + " >" + caracter + "< " + "\tvalor = "+(int)caracter +" \testado atual: "+ estadoAtual + " \tproximo estado: "+estadoFinal);
   }
 
   /* Mapa do Estado 0
@@ -688,7 +688,7 @@ class AnalisadorSintatico {
 
   public void MostrarTransicao(Simbolo simbolo, String estadoAtual, String estadoFinal){
     if(debugMode)
-    System.out.println("Token: "+ this.simbolo.token + " \tLexema: " + this.simbolo.lexema + " \testado atual: " + estadoAtual + " \tproximo estado: "+estadoFinal);
+    System.out.println("SINTATICO Token: "+ this.simbolo.token + " \tLexema: " + this.simbolo.lexema + " \testado atual: " + estadoAtual + " \tproximo estado: "+estadoFinal);
   }
 
 
@@ -800,15 +800,7 @@ class AnalisadorSintatico {
         CasaToken(this.tabelasimbolos.VIRGULA);
         MostrarTransicao(this.simbolo, "X", "X");
         X();
-      } else {
-              if (analisadorlexico.fimDeArquivo) {
-                  System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
-                  System.exit(0);
-              } else {
-                  System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
-                  System.exit(0);
-              }
-          }
+      }
     }
   }
 

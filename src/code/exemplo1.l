@@ -1,6 +1,6 @@
 /* Exemplo de Programa na linguagem L */
 
-int n;
+int n.
 char nome[40];
 final MAXITER=10;
 
