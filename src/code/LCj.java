@@ -1,6 +1,6 @@
 /**
 * Trabalho de compiladores - LC
-* Arquivo contendo classes  AnalisadorLexico, AnalisadorSintatico, Simbolo, TabelaSimbolos, Util e LC
+* Arquivo contendo classes Simbolo, TabelaSimbolos, Util, AnalisadorLexico e AnalisadorSintatico
 * Professor: Alexei Machado
 *
 * @author Ana Flavia
@@ -30,7 +30,7 @@ import java.util.HashMap;
 *
 */
 
-class AnalisadorLexico{
+public class AnalisadorLexico{
 
   public BufferedReader codigo;
   public TabelaDeSimbolos tabelaDeSimbolos;
@@ -411,6 +411,7 @@ class AnalisadorLexico{
       return 6;
     }
     MostrarErro(caracter);
+
     return 19;
   }
 
@@ -727,7 +728,7 @@ class AnalisadorSintatico {
       System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
       System.exit(0);
     }
-    System.out.println(analisadorlexico.linha+" linhas compiladas.");
+    System.out.println((analisadorlexico.linha-1)+" linhas compiladas.");
     System.exit(0);
   }
 
@@ -769,15 +770,7 @@ class AnalisadorSintatico {
       CasaToken(this.tabelasimbolos.CHAR);
       MostrarTransicao(this.simbolo, "T", "X");
       X();
-    } else {
-            if (analisadorlexico.fimDeArquivo) {
-                System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
-                System.exit(0);
-            } else {
-                System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
-                System.exit(0);
-            }
-        }
+    }
   }
 
   /*
@@ -800,15 +793,7 @@ class AnalisadorSintatico {
         CasaToken(this.tabelasimbolos.VIRGULA);
         MostrarTransicao(this.simbolo, "X", "X");
         X();
-      } else {
-              if (analisadorlexico.fimDeArquivo) {
-                  System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
-                  System.exit(0);
-              } else {
-                  System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
-                  System.exit(0);
-              }
-          }
+      }
     }
   }
 
@@ -882,10 +867,8 @@ class AnalisadorSintatico {
       CasaToken(this.tabelasimbolos.THEN);
       if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTA){
         CasaToken(this.tabelasimbolos.CHAVES_ABERTA);
-        while (this.simbolo.token != this.tabelasimbolos.CHAVES_FECHADA){
-          MostrarTransicao(this.simbolo, "C", "C");
-          C();
-        }
+        MostrarTransicao(this.simbolo, "C", "C");
+        C();
         CasaToken(this.tabelasimbolos.CHAVES_FECHADA);
       } else {
         MostrarTransicao(this.simbolo, "C", "C");
@@ -895,10 +878,8 @@ class AnalisadorSintatico {
         CasaToken(this.tabelasimbolos.ELSE);
         if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTA){
           CasaToken(this.tabelasimbolos.CHAVES_ABERTA);
-          while (this.simbolo.token != this.tabelasimbolos.CHAVES_FECHADA){
-            MostrarTransicao(this.simbolo, "C", "C");
-            C();
-          }
+          MostrarTransicao(this.simbolo, "C", "C");
+          C();
           CasaToken(this.tabelasimbolos.CHAVES_FECHADA);
         } else {
           MostrarTransicao(this.simbolo, "C", "C");
@@ -1082,15 +1063,7 @@ class AnalisadorSintatico {
         Exp();
         CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
       }
-    } else {
-            if (analisadorlexico.fimDeArquivo) {
-                System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
-                System.exit(0);
-            } else {
-                System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
-                System.exit(0);
-            }
-        }
+    }
   }
 }
 
@@ -1412,7 +1385,7 @@ class Util{
 public class LC{
 
     public static void main(String[] args) throws Exception{
-        boolean debugMode = false;
+      public boolean debugMode = false;
         try{
             InputStreamReader isr = new InputStreamReader(System.in, "UTF-8");
             BufferedReader br = new BufferedReader(isr);
