@@ -2,6 +2,7 @@
 
 int n;
 char nome[40];
+boolean p;
 final MAXITER=10;
 
 main {

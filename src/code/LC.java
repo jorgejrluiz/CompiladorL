@@ -697,9 +697,9 @@ class AnalisadorSintatico {
   */
   public void S() {
     if (this.simbolo.token == this.tabelasimbolos.INT || this.simbolo.token == this.tabelasimbolos.CHAR ||
-    this.simbolo.token == this.tabelasimbolos.FINAL) {
+        this.simbolo.token == this.tabelasimbolos.FINAL || this.simbolo.token == this.tabelasimbolos.BOOLEAN) {
       while (this.simbolo.token == this.tabelasimbolos.INT || this.simbolo.token == this.tabelasimbolos.CHAR ||
-      this.simbolo.token == this.tabelasimbolos.FINAL) {
+             this.simbolo.token == this.tabelasimbolos.FINAL || this.simbolo.token == this.tabelasimbolos.BOOLEAN) {
         MostrarTransicao(this.simbolo, "S", "D");
         D();
       }
@@ -727,7 +727,7 @@ class AnalisadorSintatico {
       System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
       System.exit(0);
     }
-    System.out.println(analisadorlexico.linha+" linhas compiladas.");
+    System.out.println((analisadorlexico.linha-1)+" linhas compiladas.");
     System.exit(0);
   }
 
@@ -735,7 +735,8 @@ class AnalisadorSintatico {
   * D -> T X ; | final id = V;
   */
   public void D() {
-    if (this.simbolo.token == this.tabelasimbolos.INT || this.simbolo.token == this.tabelasimbolos.CHAR) {
+    if (this.simbolo.token == this.tabelasimbolos.INT || this.simbolo.token == this.tabelasimbolos.CHAR ||
+        this.simbolo.token == this.tabelasimbolos.BOOLEAN) {
       MostrarTransicao(this.simbolo, "D", "T");
       T();
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
@@ -767,6 +768,10 @@ class AnalisadorSintatico {
       X();
     } else if (this.simbolo.token == this.tabelasimbolos.CHAR){
       CasaToken(this.tabelasimbolos.CHAR);
+      MostrarTransicao(this.simbolo, "T", "X");
+      X();
+    } else if (this.simbolo.token == this.tabelasimbolos.BOOLEAN){
+      CasaToken(this.tabelasimbolos.BOOLEAN);
       MostrarTransicao(this.simbolo, "T", "X");
       X();
     } else {
@@ -1173,6 +1178,7 @@ class TabelaDeSimbolos{
     public final static byte CONSTANTE = 37;
     public final static byte IDENTIFICADOR = 38;
     public final static byte PONTO = 39;
+    public final static byte BOOLEAN = 40;
 
     /**
      * Metodo construtor da tabela de simbolos
@@ -1218,6 +1224,7 @@ class TabelaDeSimbolos{
       tabela.put("const", new Simbolo(CONSTANTE, "const"));
       tabela.put("id", new Simbolo(IDENTIFICADOR, "id"));
       tabela.put(".", new Simbolo(PONTO, "."));
+      tabela.put("boolean", new Simbolo(BOOLEAN, "boolean"));
 
     }
 
