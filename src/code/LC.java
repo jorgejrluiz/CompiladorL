@@ -1172,6 +1172,7 @@ class TabelaDeSimbolos{
     public final static byte CIFRAO = 36;
     public final static byte CONSTANTE = 37;
     public final static byte IDENTIFICADOR = 38;
+    public final static byte PONTO = 39;
 
     /**
      * Metodo construtor da tabela de simbolos
@@ -1216,6 +1217,8 @@ class TabelaDeSimbolos{
       tabela.put("$", new Simbolo(CIFRAO, "cifrao"));
       tabela.put("const", new Simbolo(CONSTANTE, "const"));
       tabela.put("id", new Simbolo(IDENTIFICADOR, "id"));
+      tabela.put(".", new Simbolo(PONTO, "."));
+
     }
 
     /**
