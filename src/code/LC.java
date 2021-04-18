@@ -192,7 +192,6 @@ class AnalisadorLexico{
         System.exit(0);
       }else {
         System.out.println(linha);
-        //System.out.println(">"+(int)caracter+"<");
         System.out.println("caractere invalido.");
         System.exit(0);
       }
@@ -273,7 +272,7 @@ class AnalisadorLexico{
       MostrarTransicao(caracter, 0, 13);
       return 13;
     } else if(Util.EhQuebraDeLinha(caracter)) {
-      if(Util.barraN == caracter || Util.novalinha == caracter) {
+      if(10 == (int)caracter) {
         linha++;
       }
       return 0;
@@ -367,7 +366,7 @@ class AnalisadorLexico{
       MostrarTransicao(caracter, 4, 3);
       return 3;
     } else if(caracter != Util.asterisco && caracter != Util.fimDeArquivo){
-      if(Util.barraN == caracter || Util.novalinha == caracter) {
+      if(10 == (int)caracter) {
           linha++;
       }
       MostrarTransicao(caracter, 4, 4);
@@ -530,7 +529,7 @@ class AnalisadorLexico{
   */
   public int Estado13(){
     char caracter = LerCaracter();
-
+    //System.out.println(caracter);
     if(Util.EhDigito(caracter)){
       lexema += caracter;
       MostrarTransicao(caracter, 13, 14);
@@ -539,11 +538,12 @@ class AnalisadorLexico{
       lexema += caracter;
       MostrarTransicao(caracter, 13, 17);
       return 17;
-    } else if(Util.EhCaracterValido(caracter)) {
+    } else if(!Util.EhDigito(caracter) && !Util.EhHexadecimal(caracter) && caracter != 'h') {
       MostrarTransicao(caracter, 13, 19);
       devolve = true;
       return 19;
-    }
+    } 
+
     MostrarErro(caracter);
     return 19;
   }
@@ -563,7 +563,11 @@ class AnalisadorLexico{
       lexema += caracter;
       MostrarTransicao(caracter, 13, 18);
       return 18;
-    }
+    } else if(!Util.EhDigito(caracter) && !Util.EhHexadecimal(caracter)) {
+      MostrarTransicao(caracter, 13, 19);
+      devolve = true;
+      return 19;
+    } 
     MostrarErro(caracter);
     return 19;
   }
@@ -575,9 +579,10 @@ class AnalisadorLexico{
   public int Estado15(){
     char caracter = LerCaracter();
 
-    if(caracter == 'h'){
+    if(caracter == 'h' || !Util.EhDigito(caracter) && !Util.EhHexadecimal(caracter)){
       lexema += caracter;
       MostrarTransicao(caracter, 15, 19);
+      devolve = true;
       return 19;
     } else if(Util.EhDigito(caracter)){
       lexema += caracter;
@@ -727,7 +732,7 @@ class AnalisadorSintatico {
       System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
       System.exit(0);
     }
-    System.out.println((analisadorlexico.linha-1)+" linhas compiladas.");
+    System.out.println((analisadorlexico.linha)+" linhas compiladas.");
     System.exit(0);
   }
 
@@ -786,31 +791,30 @@ class AnalisadorSintatico {
   }
 
   /*
-  * X -> { id ([ = V ] | "["constante"]" ) [,] }+
+  * X -> { id ([ := V ] | "["constante"]" ) [,] }+
   */
   public void X() {
     while(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
       CasaToken(this.tabelasimbolos.IDENTIFICADOR);
-
-      if(this.simbolo.token == this.tabelasimbolos.IGUAL){
-        CasaToken(this.tabelasimbolos.IGUAL);
+      if(this.simbolo.token == this.tabelasimbolos.DOIS_PONTOS_IGUAL){
+        CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
         MostrarTransicao(this.simbolo, "X", "V");
         V();
-      } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+      } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO) {
         CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
         CasaToken(this.tabelasimbolos.CONSTANTE);
         CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
       }
-      if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
+      if(this.simbolo.token == this.tabelasimbolos.VIRGULA) {
         CasaToken(this.tabelasimbolos.VIRGULA);
         MostrarTransicao(this.simbolo, "X", "X");
         X();
-      }
+      } 
     }
   }
 
   /*
-  * V -> [ + | - ] constante
+  * V -> [ + | - ] constante | true | false
   */
   public void V() {
     if (this.simbolo.token == this.tabelasimbolos.MAIS) {
@@ -819,9 +823,13 @@ class AnalisadorSintatico {
     } else if (this.simbolo.token == this.tabelasimbolos.MENOS) {
       CasaToken(this.tabelasimbolos.MENOS);
       CasaToken(this.tabelasimbolos.CONSTANTE);
+    } else if (this.simbolo.token == this.tabelasimbolos.TRUE)  {
+      CasaToken(this.tabelasimbolos.TRUE);
+    } else if (this.simbolo.token == this.tabelasimbolos.FALSE)  {
+      CasaToken(this.tabelasimbolos.FALSE);
     } else {
       CasaToken(this.tabelasimbolos.CONSTANTE);
-    }
+    }    
   }
 
   /**
@@ -974,8 +982,8 @@ class AnalisadorSintatico {
   public void Exp() {
     MostrarTransicao(this.simbolo, "Exp", "ExpS");
     ExpS();
-    if(this.simbolo.token == this.tabelasimbolos.IGUAL){
-      CasaToken(this.tabelasimbolos.IGUAL);
+    if(this.simbolo.token == this.tabelasimbolos.DOIS_PONTOS_IGUAL){
+      CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
       MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
     } else if(this.simbolo.token == this.tabelasimbolos.DIFERENTE){
@@ -1071,6 +1079,10 @@ class AnalisadorSintatico {
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
     } else if(this.simbolo.token == this.tabelasimbolos.CONSTANTE){
       CasaToken(this.tabelasimbolos.CONSTANTE);
+    } else if (this.simbolo.token == this.tabelasimbolos.TRUE)  {
+      CasaToken(this.tabelasimbolos.TRUE);
+    } else if (this.simbolo.token == this.tabelasimbolos.FALSE)  {
+      CasaToken(this.tabelasimbolos.FALSE);
     } else if(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
       CasaToken(this.tabelasimbolos.IDENTIFICADOR);
       if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
@@ -1406,7 +1418,7 @@ class Util{
      * @return boolean
      */
     public static boolean EhCaracterValido(char caracter) {
-        return ( EhLetra(caracter) || EhDigito(caracter) || EhCaracterEspecial(caracter));
+        return ( EhLetra(caracter) || EhDigito(caracter) || EhCaracterEspecial(caracter) || EhQuebraDeLinha(caracter));
     }
 
 }
