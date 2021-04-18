@@ -4,8 +4,8 @@
 /* **/
 
 /* inteiros */
-int i_a := 000,paulin;
-/*int i_b, i_c;
+int i_a := 000, paulin;
+int i_b, i_c;
 int i_d :=4, i_e[8], i_f, i_g:= - 2;
 
 /* caracteres */

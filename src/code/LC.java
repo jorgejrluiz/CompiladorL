@@ -178,6 +178,9 @@ class AnalisadorLexico{
   * @param char caracter que gerou o erro
   */
   public void MostrarErro(char caracter) {
+    //System.out.println("C: " + caracter);
+    //System.out.println("L: " + lexema);
+
     if(lexema == ""){
       lexema += caracter;
     }
@@ -529,7 +532,7 @@ class AnalisadorLexico{
   */
   public int Estado13(){
     char caracter = LerCaracter();
-    //System.out.println(caracter);
+    //System.out.println("___________________" + caracter);
     if(Util.EhDigito(caracter)){
       lexema += caracter;
       MostrarTransicao(caracter, 13, 14);
@@ -542,7 +545,7 @@ class AnalisadorLexico{
       MostrarTransicao(caracter, 13, 19);
       devolve = true;
       return 19;
-    } 
+    }
 
     MostrarErro(caracter);
     return 19;
@@ -567,7 +570,7 @@ class AnalisadorLexico{
       MostrarTransicao(caracter, 13, 19);
       devolve = true;
       return 19;
-    } 
+    }
     MostrarErro(caracter);
     return 19;
   }
@@ -582,7 +585,9 @@ class AnalisadorLexico{
     if(caracter == 'h' || !Util.EhDigito(caracter) && !Util.EhHexadecimal(caracter)){
       lexema += caracter;
       MostrarTransicao(caracter, 15, 19);
-      devolve = true;
+      if (caracter != 'h'){
+        devolve = true;
+      }
       return 19;
     } else if(Util.EhDigito(caracter)){
       lexema += caracter;
@@ -744,7 +749,7 @@ class AnalisadorSintatico {
         this.simbolo.token == this.tabelasimbolos.BOOLEAN) {
       MostrarTransicao(this.simbolo, "D", "T");
       T();
-      CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+      //CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
     } else if(this.simbolo.token == this.tabelasimbolos.FINAL) {
       CasaToken(this.tabelasimbolos.FINAL);
       CasaToken(this.tabelasimbolos.IDENTIFICADOR);
@@ -805,11 +810,13 @@ class AnalisadorSintatico {
         CasaToken(this.tabelasimbolos.CONSTANTE);
         CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
       }
-      if(this.simbolo.token == this.tabelasimbolos.VIRGULA) {
+      if(this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA) {
+        CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+      } else {//if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
         CasaToken(this.tabelasimbolos.VIRGULA);
         MostrarTransicao(this.simbolo, "X", "X");
         X();
-      } 
+      }
     }
   }
 
@@ -828,8 +835,9 @@ class AnalisadorSintatico {
     } else if (this.simbolo.token == this.tabelasimbolos.FALSE)  {
       CasaToken(this.tabelasimbolos.FALSE);
     } else {
+      //System.out.println("CONSTANTE: " + this.simbolo.lexema);
       CasaToken(this.tabelasimbolos.CONSTANTE);
-    }    
+    }
   }
 
   /**
