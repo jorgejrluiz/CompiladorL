@@ -346,7 +346,7 @@ class AnalisadorLexico{
     if(caracter == Util.asterisco){
       MostrarTransicao(caracter, 3, 3);
       return 3;
-    } else if(caracter != Util.barra && caracter != Util.asterisco ) {
+    } else if(caracter != Util.barra && caracter != Util.asterisco && Util.EhCaracterValido(caracter)) {
       MostrarTransicao(caracter, 3, 4);
       return 4;
     } else if(caracter == Util.barra) {
@@ -368,7 +368,7 @@ class AnalisadorLexico{
     if(caracter == Util.asterisco){
       MostrarTransicao(caracter, 4, 3);
       return 3;
-    } else if(caracter != Util.asterisco && caracter != Util.fimDeArquivo){
+    } else if(caracter != Util.asterisco && caracter != Util.fimDeArquivo && Util.EhCaracterValido(caracter)){
       if(10 == (int)caracter) {
           linha++;
       }
@@ -658,6 +658,7 @@ class AnalisadorSintatico {
   Simbolo simboloAnterior = new Simbolo();
   BufferedReader file;
   public boolean debugMode;
+  public boolean segundoBloco = false;
 
 
   /**
@@ -861,9 +862,11 @@ class AnalisadorSintatico {
 
       CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
       Exp();
-      if(this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA){
+      if(!this.segundoBloco){
         CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+        this.segundoBloco = false;
       }
+
     } else if(this.simbolo.token == this.tabelasimbolos.FOR){
       CasaToken(this.tabelasimbolos.FOR);
       CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
@@ -873,6 +876,7 @@ class AnalisadorSintatico {
       Exp();
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
       MostrarTransicao(this.simbolo, "C", "J");
+      this.segundoBloco = true;
       J();
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
       if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTA){
@@ -929,14 +933,20 @@ class AnalisadorSintatico {
         CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
       }
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
-      CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+      if(!this.segundoBloco){
+        CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+        this.segundoBloco = false;
+      }
     } else if(this.simbolo.token == this.tabelasimbolos.WRITE){
       CasaToken(this.tabelasimbolos.WRITE);
       CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
       MostrarTransicao(this.simbolo, "C", "A");
       A();
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
-      CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+      if(!this.segundoBloco){
+        CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+        this.segundoBloco = false;
+      }
 
     } else if(this.simbolo.token == this.tabelasimbolos.WRITELN){
       CasaToken(this.tabelasimbolos.WRITELN);
@@ -944,7 +954,10 @@ class AnalisadorSintatico {
       MostrarTransicao(this.simbolo, "C", "A");
       A();
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
-      CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+      if(!this.segundoBloco){
+        CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+        this.segundoBloco = false;
+      }
 
     } else if(this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA){
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);

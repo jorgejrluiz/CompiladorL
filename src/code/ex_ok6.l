@@ -47,6 +47,8 @@ main
             writeln("");
         }
 
+
+    write("Digite seu nome: ");
     if (2 + 3 > i_a) then
         if (i_a < 0) then
             i_a := 0;
