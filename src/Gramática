@@ -21,9 +21,9 @@ D -> T X ; | final id = V;
 X -> { id ([ = V ] | "["constante"]" ) [,] }+
 T -> int | boolean | char 
 V -> [ + | - ] constante
-
+9 
 C ->  id [ "["Exp"]" ] := Exp; | 
-      for "(" {J}; Exp; {J}; ")" ( C | "{" {C}+ "}" ) |
+      for "(" {J}; Exp; {J} ")" ( C | "{" {C}+ "}" ) |
       if "(" Exp ")" then (C |"{"{C}"}") [else (C |"{"{C}"}")] |
       readln "(" id [ "[" Exp "]" ] ")"; |
       write "(" {A}+ ")" ; |

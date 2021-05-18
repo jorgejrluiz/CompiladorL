@@ -749,14 +749,16 @@ class AnalisadorSintatico {
     if (this.simbolo.token == this.tabelasimbolos.INT || this.simbolo.token == this.tabelasimbolos.CHAR ||
         this.simbolo.token == this.tabelasimbolos.BOOLEAN) {
       MostrarTransicao(this.simbolo, "D", "T");
-      T();
+      novoSimbolo.classe = 0; // eh uma variavel
+      T(novoSimbolo);
       //CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
     } else if(this.simbolo.token == this.tabelasimbolos.FINAL) {
+      novoSimbolo.classe = 1; // eh uma constante
       CasaToken(this.tabelasimbolos.FINAL);
       CasaToken(this.tabelasimbolos.IDENTIFICADOR);
       CasaToken(this.tabelasimbolos.IGUAL);
       MostrarTransicao(this.simbolo, "D", "V");
-      V();
+      V(novoSimbolo);
       CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
     } else {
             if (analisadorlexico.fimDeArquivo) {
@@ -772,19 +774,22 @@ class AnalisadorSintatico {
   /*
   * T -> int | boolean | char
   */
-  public void T() {
+  public void T(Simbolo novoSimbolo) {
     if (this.simbolo.token == this.tabelasimbolos.INT){
       CasaToken(this.tabelasimbolos.INT);
       MostrarTransicao(this.simbolo, "T", "X");
-      X();
+      novoSimbolo.tipo = 2; //TIPO INT
+      X(novoSimbolo);
     } else if (this.simbolo.token == this.tabelasimbolos.CHAR){
       CasaToken(this.tabelasimbolos.CHAR);
       MostrarTransicao(this.simbolo, "T", "X");
-      X();
+      novoSimbolo.tipo = 3; //TIPO CHAR
+      X(novoSimbolo);
     } else if (this.simbolo.token == this.tabelasimbolos.BOOLEAN){
       CasaToken(this.tabelasimbolos.BOOLEAN);
       MostrarTransicao(this.simbolo, "T", "X");
-      X();
+      novoSimbolo.tipo = 1; //TIPO BOOLEAN
+      X(novoSimbolo);
     } else {
             if (analisadorlexico.fimDeArquivo) {
                 System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
@@ -799,32 +804,40 @@ class AnalisadorSintatico {
   /*
   * X -> { id ([ := V ] | "["constante"]" ) [,] }+
   */
-  public void X() {
+  public void X(Simbolo novoSimbolo) {
     while(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
-      CasaToken(this.tabelasimbolos.IDENTIFICADOR);
-      if(this.simbolo.token == this.tabelasimbolos.DOIS_PONTOS_IGUAL){
-        CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
-        MostrarTransicao(this.simbolo, "X", "V");
-        V();
-      } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO) {
-        CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
-        CasaToken(this.tabelasimbolos.CONSTANTE);
-        CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
-      }
-      if(this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA) {
-        CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-      } else {//if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
-        CasaToken(this.tabelasimbolos.VIRGULA);
-        MostrarTransicao(this.simbolo, "X", "X");
-        X();
-      }
+      if(this.simbolo.tipo != 0){
+        System.out.println(this.analisadorlexico.linha + "\nidentificador ja declarado [" + this.simbolo.lexema + "].");
+        System.exit(0);
+      } else {
+            this.simbolo.tipo = novoSimbolo.tipo;
+            this.simbolo.classe = novoSimbolo.classe;
+            simboloAnterior = this.simbolo;
+            CasaToken(this.tabelasimbolos.IDENTIFICADOR);
+            if(this.simbolo.token == this.tabelasimbolos.DOIS_PONTOS_IGUAL){
+              CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
+              MostrarTransicao(this.simbolo, "X", "V");
+              V(novoSimbolo);
+            } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO) {
+              CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+              CasaToken(this.tabelasimbolos.CONSTANTE);
+              CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+            }
+            if(this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA) {
+              CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+            } else {//if(this.simbolo.token == this.tabelasimbolos.VIRGULA){
+              CasaToken(this.tabelasimbolos.VIRGULA);
+              MostrarTransicao(this.simbolo, "X", "X");
+              X(novoSimbolo);
+            }
+        }
     }
   }
 
   /*
   * V -> [ + | - ] constante | true | false
   */
-  public void V() {
+  public void V(Simbolo novoSimbolo) {
     if (this.simbolo.token == this.tabelasimbolos.MAIS) {
       CasaToken(this.tabelasimbolos.MAIS);
       CasaToken(this.tabelasimbolos.CONSTANTE);
@@ -1141,7 +1154,19 @@ class Simbolo{
     public byte token;
     public String lexema;
     public String tipo;
+    public byte classe;
     public int tamanho;
+    public boolean ehDigito = false;
+
+
+    public static final byte classeVAR = 0;
+    public static final byte classeCONST = 1;
+
+    public static final byte semTipo = 0;
+    public static final byte tipoBoolean = 1;
+    public static final byte tipoInt = 2;
+    public static final byte tipoChar = 3;
+
 
     public Simbolo(){
     }
@@ -1149,12 +1174,32 @@ class Simbolo{
     public Simbolo(byte token, String lexema){
         this.token = token;
         this.lexema = lexema;
+        this.tipo = 0;
+        this.classe = 0;
+        this.ehDigito = false;
     }
 
     public Simbolo(byte token, String lexema, String tipo) {
         this.token = token;
         this.lexema = lexema;
         this.tipo = tipo;
+    }
+
+    public Simbolo(byte token, String lexema, boolean ehDigito){
+        this.token = token;
+        this.lexema = lexema;
+        this.tipo = 0;
+        this.classe = 0;
+        this.ehDigito = ehDigito;
+    }
+
+    public Simbolo(byte token, String lexema, byte tipo, int tamanho) {
+        this.tipo = tipo;
+        this.classe = 0;
+        this.ehDigito = false;
+        this.token = token;
+        this.lexema = lexema;
+        this.tamanho = tamanho;
     }
 }
 
@@ -1358,6 +1403,8 @@ class Util{
     public static char cursorInicio = 13;
     public static char fimDeArquivo = 65535;
     public static char espaco = 32;
+    public static int tamanhoMaxVetor = 32768;
+
 
     /**
      * Metodo para verificar se eh letra
