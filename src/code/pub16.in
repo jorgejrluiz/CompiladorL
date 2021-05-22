@@ -2,7 +2,6 @@
 
 int n;
 char nome[40];
-boolean p;
 final MAXITER=10;
 
 main {
@@ -10,6 +9,6 @@ main {
 
   write("Digite seu nome: ");
   readln(nome);
-  for (n:=TRUE; n<=MAXITER; n:=n+1)
-    writeln("Ola' ",nome);
+  for (n:=FALSE; n<=MAXITER; n:=n+1)
+    writeln("Ola ",nome);
 }

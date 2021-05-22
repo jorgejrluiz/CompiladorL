@@ -852,6 +852,10 @@ class AnalisadorSintatico {
               CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
               MostrarTransicao(this.simbolo, "X", "V");
               V(novoSimbolo);
+              if(simboloAnterior.tipo != novoSimbolo.tipo){
+                    System.out.println(this.analisadorlexico.linha + "\ntipos incompativeis.");
+                    System.exit(0);
+              }
 
             } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO) {
               CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
@@ -883,32 +887,40 @@ class AnalisadorSintatico {
       //EH UM INT
       CasaToken(this.tabelasimbolos.MAIS);
       novoSimbolo.tipo = 2; //TIPO INT
+      novoSimbolo.lexema = this.simbolo.lexema;
       CasaToken(this.tabelasimbolos.CONSTANTE);
     } else if (this.simbolo.token == this.tabelasimbolos.MENOS) {
       //EH UM INT
       CasaToken(this.tabelasimbolos.MENOS);
       novoSimbolo.tipo = 2; //TIPO INT
+      novoSimbolo.lexema = this.simbolo.lexema;
       CasaToken(this.tabelasimbolos.CONSTANTE);
     } else if (this.simbolo.token == this.tabelasimbolos.TRUE)  {
       // verifica se o tipo do valor eh igual ao tipo declarado
       novoSimbolo.tipo = 1; //TIPO BOOLEAN
+      novoSimbolo.lexema = this.simbolo.lexema;
       CasaToken(this.tabelasimbolos.TRUE);
     } else if (this.simbolo.token == this.tabelasimbolos.FALSE)  {
       // verifica se o tipo do valor eh igual ao tipo declarado
       novoSimbolo.tipo = 1; //TIPO BOOLEAN
+      novoSimbolo.lexema = this.simbolo.lexema;
       CasaToken(this.tabelasimbolos.FALSE);
     } else {
       // OU INT OU CHAR
       /*
       if(this.simbolo.lexema.contains("$") || Util.validarString(this.simbolo.lexema)){
         novoSimbolo.tipo = 3; //EH CHAR
+        novoSimbolo.lexema = this.simbolo.lexema;
       } else {
         novoSimbolo.tipo = 2;  // EH INT
+        novoSimbolo.lexema = this.simbolo.lexema;
       }*/
       if(this.simbolo.ehDigito){
         novoSimbolo.tipo = 2;  // EH INT
+        novoSimbolo.lexema = this.simbolo.lexema;
       } else {
         novoSimbolo.tipo = 3;  //EH CHAR
+        novoSimbolo.lexema = this.simbolo.lexema;
       }
       //System.out.println(this.simbolo.ehDigito + " " + this.simbolo.lexema);
       CasaToken(this.tabelasimbolos.CONSTANTE);
@@ -932,6 +944,8 @@ class AnalisadorSintatico {
         System.out.println(this.analisadorlexico.linha + "\nidentificador nao declarado [" + this.simbolo.lexema + "].");
         System.exit(0);
       } else {
+        //MUDEI AQUI
+        simboloAnterior = this.simbolo;
         CasaToken(this.tabelasimbolos.IDENTIFICADOR);
 
         if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
@@ -948,12 +962,17 @@ class AnalisadorSintatico {
 
         CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
         Exp();
-
-
-          if(!this.segundoBloco){
-            CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-            this.segundoBloco = false;
-          }
+        if(simboloAnterior.classe == 2){ //eh constante não pode alterar valor
+              System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
+              System.exit(0);
+        } else if(simboloAnterior.tipo != novoSimbolo.tipo){
+              System.out.println(this.analisadorlexico.linha + "\ntipos incompativeis.");
+              System.exit(0);
+        }
+        if(!this.segundoBloco){
+          CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+          this.segundoBloco = false;
+        }
 
       }
     } else if(this.simbolo.token == this.tabelasimbolos.FOR){
@@ -1204,6 +1223,13 @@ class AnalisadorSintatico {
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
     } else if(this.simbolo.token == this.tabelasimbolos.CONSTANTE){
       //System.out.println(this.simbolo.ehDigito + " " + this.simbolo.lexema);
+      if(this.simbolo.ehDigito){
+        novoSimbolo.tipo = 2;  // EH INT
+        novoSimbolo.lexema = this.simbolo.lexema;
+      } else {
+        novoSimbolo.tipo = 3;  //EH CHAR
+        novoSimbolo.lexema = this.simbolo.lexema;
+      }
       CasaToken(this.tabelasimbolos.CONSTANTE);
     } else if (this.simbolo.token == this.tabelasimbolos.TRUE)  {
       CasaToken(this.tabelasimbolos.TRUE);
