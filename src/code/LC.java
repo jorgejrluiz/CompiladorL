@@ -35,13 +35,14 @@ class AnalisadorLexico{
   public BufferedReader codigo;
   public TabelaDeSimbolos tabelaDeSimbolos;
   public String lexema;
-  public String tipoConst;
+  public byte tipoConst;
   public char ultimaLetra;
   public int linha;
   public boolean errorCompilacao;
   public boolean devolve;
   public boolean fimDeArquivo;
   public boolean debugMode;
+  public boolean ehDigito = false;
 
 
   /**
@@ -135,12 +136,9 @@ class AnalisadorLexico{
     if(!fimDeArquivo) {
       if(tabelaDeSimbolos.BuscarLexema(lexema) == null) {
         if(lexema.charAt(0) == '"' || lexema.charAt(0) == '\'' || Util.EhDigito(lexema.charAt(0))) {
-          Simbolo simboloConst = new Simbolo(tabelaDeSimbolos.CONSTANTE, lexema, tipoConst);
+          Simbolo simboloConst = new Simbolo(tabelaDeSimbolos.CONSTANTE, lexema, ehDigito);
           return simboloConst;
         } else {
-          if(debugMode){
-            System.out.println("INSERE O IDENTIFICADOR: >"+ lexema + "<");
-          }
           Simbolo simboloIdentificador = tabelaDeSimbolos.InserirIdentificador(lexema);
           return simboloIdentificador;
         }
@@ -226,7 +224,7 @@ class AnalisadorLexico{
   public int Estado0() {
     lexema = "";
     char caracter = LerCaracter();
-
+    ehDigito = false;
     if(caracter == Util.espaco || caracter == Util.cursorInicio){
       MostrarTransicao(caracter, 0, 0);
       return 0;
@@ -267,10 +265,12 @@ class AnalisadorLexico{
       MostrarTransicao(caracter, 0, 11);
       return 11;
     } else if(caracter != '0' && Util.EhDigito(caracter)){
+      ehDigito = true;
       lexema += caracter;
       MostrarTransicao(caracter, 0, 12);
       return 12;
     } else if(caracter == '0'){
+      ehDigito = true;
       lexema += caracter;
       MostrarTransicao(caracter, 0, 13);
       return 13;
@@ -296,7 +296,7 @@ class AnalisadorLexico{
   * se letra ou digito vai para 2
   */
   public int Estado1() {
-
+    ehDigito = false;
     char caracter = LerCaracter();
 
     if(caracter == Util.sublinhado){
@@ -319,6 +319,7 @@ class AnalisadorLexico{
   * diferente de letra, digito ou sublinhado devolve e vai para 19
   */
   public int Estado2() {
+    ehDigito = false;
     char caracter = LerCaracter();
 
     if(caracter == Util.sublinhado || Util.EhLetra(caracter) || Util.EhDigito(caracter)){
@@ -341,6 +342,7 @@ class AnalisadorLexico{
   * se / volta para 0
   */
   public int Estado3() {
+    ehDigito = false;
     char caracter = LerCaracter();
 
     if(caracter == Util.asterisco){
@@ -363,6 +365,7 @@ class AnalisadorLexico{
   * diferente de * volta para 4
   */
   public int Estado4() {
+    ehDigito = false;
     char caracter = LerCaracter();
 
     if(caracter == Util.asterisco){
@@ -384,6 +387,7 @@ class AnalisadorLexico{
   * diferente de * devolve e vai para 19
   */
   public int Estado5() {
+    ehDigito = false;
     char caracter = LerCaracter();
     if(caracter == Util.asterisco){
       MostrarTransicao(caracter, 5, 4);
@@ -403,6 +407,7 @@ class AnalisadorLexico{
   * se aspas vai para 19
   */
   public int Estado6() {
+    ehDigito = false;
     char caracter = LerCaracter();
     if (caracter == Util.aspas) {
       MostrarTransicao(caracter, 6, 19);
@@ -420,6 +425,7 @@ class AnalisadorLexico{
   * se letra, digito, aspas, \n ou $ vai para 8
   */
   public int Estado7(){
+    ehDigito = false;
     char caracter = LerCaracter();
 
     if(Util.EhLetra(caracter) || Util.EhDigito(caracter) || caracter == Util.aspas || caracter == Util.barraN || caracter == Util.cifrao){
@@ -435,6 +441,7 @@ class AnalisadorLexico{
   * se ''' vai para 19
   */
   public int Estado8(){
+    ehDigito = false;
     char caracter = LerCaracter();
     if (caracter == Util.apostofro) {
       MostrarTransicao(caracter, 8, 19);
@@ -449,6 +456,7 @@ class AnalisadorLexico{
   * se diferente de = devolve e vai para 19
   */
   public int Estado9(){
+    ehDigito = false;
     char caracter = LerCaracter();
 
     if(caracter == Util.igual){
@@ -470,6 +478,7 @@ class AnalisadorLexico{
   * se diferente de > ou diferente de = devolve e vai para 19
   */
   public int Estado10(){
+    ehDigito = false;
     char caracter = LerCaracter();
 
     if(caracter == Util.maior || caracter == Util.igual){
@@ -490,6 +499,7 @@ class AnalisadorLexico{
   * se diferente de = devolve e vai para 19
   */
   public int Estado11(){
+    ehDigito = false;
     char caracter = LerCaracter();
 
     if(caracter == Util.igual){
@@ -534,10 +544,12 @@ class AnalisadorLexico{
     char caracter = LerCaracter();
     //System.out.println("___________________" + caracter);
     if(Util.EhDigito(caracter)){
+      ehDigito = true;
       lexema += caracter;
       MostrarTransicao(caracter, 13, 14);
       return 14;
     } else if(Util.EhHexadecimal(caracter)){
+      ehDigito = false;
       lexema += caracter;
       MostrarTransicao(caracter, 13, 17);
       return 17;
@@ -556,6 +568,7 @@ class AnalisadorLexico{
   * se A...F vai para 18
   */
   public int Estado14(){
+
     char caracter = LerCaracter();
 
     if(Util.EhDigito(caracter)){
@@ -563,10 +576,12 @@ class AnalisadorLexico{
       MostrarTransicao(caracter, 14, 15);
       return 15;
     } else if(Util.EhHexadecimal(caracter)){
+      ehDigito = false;
       lexema += caracter;
       MostrarTransicao(caracter, 13, 18);
       return 18;
     } else if(!Util.EhDigito(caracter) && !Util.EhHexadecimal(caracter)) {
+      ehDigito = false;
       MostrarTransicao(caracter, 13, 19);
       devolve = true;
       return 19;
@@ -583,6 +598,7 @@ class AnalisadorLexico{
     char caracter = LerCaracter();
 
     if(caracter == 'h' || !Util.EhDigito(caracter) && !Util.EhHexadecimal(caracter)){
+      ehDigito = false;
       lexema += caracter;
       MostrarTransicao(caracter, 15, 19);
       if (caracter != 'h'){
@@ -624,6 +640,7 @@ class AnalisadorLexico{
     char caracter = LerCaracter();
 
     if(Util.EhDigito(caracter) || Util.EhHexadecimal(caracter)){
+      ehDigito = false;
       lexema += caracter;
       MostrarTransicao(caracter, 17, 18);
       return 18;
@@ -744,23 +761,37 @@ class AnalisadorSintatico {
 
   /*
   * D -> T X ; | final id = V;
+  * D -> T (1) X ; | final (6) id = V (7);
   */
   public void D() {
     if (this.simbolo.token == this.tabelasimbolos.INT || this.simbolo.token == this.tabelasimbolos.CHAR ||
         this.simbolo.token == this.tabelasimbolos.BOOLEAN) {
       MostrarTransicao(this.simbolo, "D", "T");
-      novoSimbolo.classe = 0; // eh uma variavel
+      novoSimbolo.classe = 1; // eh uma variavel
       T(novoSimbolo);
       //CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
     } else if(this.simbolo.token == this.tabelasimbolos.FINAL) {
-      novoSimbolo.classe = 1; // eh uma constante
+
       CasaToken(this.tabelasimbolos.FINAL);
-      CasaToken(this.tabelasimbolos.IDENTIFICADOR);
-      CasaToken(this.tabelasimbolos.IGUAL);
-      MostrarTransicao(this.simbolo, "D", "V");
-      V(novoSimbolo);
-      CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-    } else {
+
+      //caso já tenha tipo, o identifcador ja foi declarado
+      if(this.simbolo.tipo != 0){
+        System.out.println(this.analisadorlexico.linha + "\nidentificador ja declarado [" + this.simbolo.lexema + "].");
+        System.exit(0);
+      } else {
+            //caso nao criamos um novo
+            this.simbolo.classe = 2; // eh uma constante
+            simboloAnterior = this.simbolo;
+
+            CasaToken(this.tabelasimbolos.IDENTIFICADOR);
+            CasaToken(this.tabelasimbolos.IGUAL);
+            MostrarTransicao(this.simbolo, "D", "V");
+            V(novoSimbolo);
+            simboloAnterior.tipo = novoSimbolo.tipo; // recebe o tipo do valor atribuido
+            tabelasimbolos.AlterarTipoLexema(simboloAnterior.lexema, simboloAnterior);
+            CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+          }
+      } else {
             if (analisadorlexico.fimDeArquivo) {
                 System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
                 System.exit(0);
@@ -803,13 +834,16 @@ class AnalisadorSintatico {
 
   /*
   * X -> { id ([ := V ] | "["constante"]" ) [,] }+
+  * X -> { (2) id ([ :=  V (4)] | "[" (5) constante"]" ) [,] }+
   */
   public void X(Simbolo novoSimbolo) {
     while(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
+      //caso já tenha tipo, o identifcador ja foi declarado
       if(this.simbolo.tipo != 0){
         System.out.println(this.analisadorlexico.linha + "\nidentificador ja declarado [" + this.simbolo.lexema + "].");
         System.exit(0);
       } else {
+            //caso nao criamos um novo
             this.simbolo.tipo = novoSimbolo.tipo;
             this.simbolo.classe = novoSimbolo.classe;
             simboloAnterior = this.simbolo;
@@ -818,8 +852,15 @@ class AnalisadorSintatico {
               CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
               MostrarTransicao(this.simbolo, "X", "V");
               V(novoSimbolo);
+
             } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO) {
               CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+              this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
+              //verifica se o valor do vetor ultrapassa o permitido
+              if(this.simbolo.tamanho > Util.tamanhoMaxVetor){
+                  System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
+                  System.exit(0);
+              }
               CasaToken(this.tabelasimbolos.CONSTANTE);
               CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
             }
@@ -835,22 +876,43 @@ class AnalisadorSintatico {
   }
 
   /*
-  * V -> [ + | - ] constante | true | false
+  * V -> [ + | - ] (3) constante | true | false
   */
   public void V(Simbolo novoSimbolo) {
     if (this.simbolo.token == this.tabelasimbolos.MAIS) {
+      //EH UM INT
       CasaToken(this.tabelasimbolos.MAIS);
+      novoSimbolo.tipo = 2; //TIPO INT
       CasaToken(this.tabelasimbolos.CONSTANTE);
     } else if (this.simbolo.token == this.tabelasimbolos.MENOS) {
+      //EH UM INT
       CasaToken(this.tabelasimbolos.MENOS);
+      novoSimbolo.tipo = 2; //TIPO INT
       CasaToken(this.tabelasimbolos.CONSTANTE);
     } else if (this.simbolo.token == this.tabelasimbolos.TRUE)  {
+      // verifica se o tipo do valor eh igual ao tipo declarado
+      novoSimbolo.tipo = 1; //TIPO BOOLEAN
       CasaToken(this.tabelasimbolos.TRUE);
     } else if (this.simbolo.token == this.tabelasimbolos.FALSE)  {
+      // verifica se o tipo do valor eh igual ao tipo declarado
+      novoSimbolo.tipo = 1; //TIPO BOOLEAN
       CasaToken(this.tabelasimbolos.FALSE);
     } else {
-      //System.out.println("CONSTANTE: " + this.simbolo.lexema);
+      // OU INT OU CHAR
+      /*
+      if(this.simbolo.lexema.contains("$") || Util.validarString(this.simbolo.lexema)){
+        novoSimbolo.tipo = 3; //EH CHAR
+      } else {
+        novoSimbolo.tipo = 2;  // EH INT
+      }*/
+      if(this.simbolo.ehDigito){
+        novoSimbolo.tipo = 2;  // EH INT
+      } else {
+        novoSimbolo.tipo = 3;  //EH CHAR
+      }
+      //System.out.println(this.simbolo.ehDigito + " " + this.simbolo.lexema);
       CasaToken(this.tabelasimbolos.CONSTANTE);
+
     }
   }
 
@@ -863,23 +925,37 @@ class AnalisadorSintatico {
   *       writeln "(" {A}+ ")" ; |
   *       ;
   */
+
   public void C() {
     if(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
-      CasaToken(this.tabelasimbolos.IDENTIFICADOR);
+      if(this.simbolo.tipo == 0){
+        System.out.println(this.analisadorlexico.linha + "\nidentificador nao declarado [" + this.simbolo.lexema + "].");
+        System.exit(0);
+      } else {
+        CasaToken(this.tabelasimbolos.IDENTIFICADOR);
 
-      if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
-        CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+        if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+          CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+          this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
+          Exp();
+          //verifica se o valor do vetor ultrapassa o permitido
+          if(this.simbolo.tamanho > Util.tamanhoMaxVetor){
+              System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
+              System.exit(0);
+          }
+          CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+        }
+
+        CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
         Exp();
-        CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
-      }
 
-      CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
-      Exp();
-      if(!this.segundoBloco){
-        CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-        this.segundoBloco = false;
-      }
 
+          if(!this.segundoBloco){
+            CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+            this.segundoBloco = false;
+          }
+
+      }
     } else if(this.simbolo.token == this.tabelasimbolos.FOR){
       CasaToken(this.tabelasimbolos.FOR);
       CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
@@ -920,6 +996,8 @@ class AnalisadorSintatico {
       } else {
         MostrarTransicao(this.simbolo, "C", "C");
         C();
+        CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+
       }
       if(this.simbolo.token == this.tabelasimbolos.ELSE){
         CasaToken(this.tabelasimbolos.ELSE);
@@ -939,16 +1017,27 @@ class AnalisadorSintatico {
     } else if(this.simbolo.token == this.tabelasimbolos.READLN){
       CasaToken(this.tabelasimbolos.READLN);
       CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
-      CasaToken(this.tabelasimbolos.IDENTIFICADOR);
-      if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
-        CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
-        Exp();
-        CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
-      }
-      CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
-      if(!this.segundoBloco){
-        CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-        this.segundoBloco = false;
+      if(this.simbolo.tipo == 0){
+        System.out.println(this.analisadorlexico.linha + "\nidentificador nao declarado [" + this.simbolo.lexema + "].");
+        System.exit(0);
+      } else {
+        CasaToken(this.tabelasimbolos.IDENTIFICADOR);
+        if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+          CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+          //this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
+          Exp();
+          //verifica se o valor do vetor ultrapassa o permitido
+          //if(this.simbolo.tamanho > Util.tamanhoMaxVetor){
+          //    System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
+          //    System.exit(0);
+          //}
+          CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+        }
+        CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
+        if(!this.segundoBloco){
+          CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+          this.segundoBloco = false;
+        }
       }
     } else if(this.simbolo.token == this.tabelasimbolos.WRITE){
       CasaToken(this.tabelasimbolos.WRITE);
@@ -984,6 +1073,8 @@ class AnalisadorSintatico {
             }
         }
   }
+
+
 
   /**
   * J -> C [,]
@@ -1112,18 +1203,32 @@ class AnalisadorSintatico {
       Exp();
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
     } else if(this.simbolo.token == this.tabelasimbolos.CONSTANTE){
+      //System.out.println(this.simbolo.ehDigito + " " + this.simbolo.lexema);
       CasaToken(this.tabelasimbolos.CONSTANTE);
     } else if (this.simbolo.token == this.tabelasimbolos.TRUE)  {
       CasaToken(this.tabelasimbolos.TRUE);
+      this.simbolo.tipo = 1; //EH BOOLEAN
     } else if (this.simbolo.token == this.tabelasimbolos.FALSE)  {
       CasaToken(this.tabelasimbolos.FALSE);
+      this.simbolo.tipo = 1; //EH BOOLEAN
     } else if(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
-      CasaToken(this.tabelasimbolos.IDENTIFICADOR);
-      if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
-        CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
-        MostrarTransicao(this.simbolo, "F", "Exp");
-        Exp();
-        CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+      if(this.simbolo.tipo == 0){
+        System.out.println(this.analisadorlexico.linha + "\nidentificador nao declarado [" + this.simbolo.lexema + "].");
+        System.exit(0);
+      } else {
+        CasaToken(this.tabelasimbolos.IDENTIFICADOR);
+        if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+          CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+          MostrarTransicao(this.simbolo, "F", "Exp");
+          //this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
+          Exp();
+          //verifica se o valor do vetor ultrapassa o permitido
+          //if(this.simbolo.tamanho > Util.tamanhoMaxVetor){
+          //    System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
+          //    System.exit(0);
+          //}
+          CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+        }
       }
     } else {
             if (analisadorlexico.fimDeArquivo) {
@@ -1153,14 +1258,14 @@ class Simbolo{
 
     public byte token;
     public String lexema;
-    public String tipo;
+    public byte tipo;
     public byte classe;
     public int tamanho;
     public boolean ehDigito = false;
 
 
-    public static final byte classeVAR = 0;
-    public static final byte classeCONST = 1;
+    public static final byte classeVAR = 1;
+    public static final byte classeCONST = 2;
 
     public static final byte semTipo = 0;
     public static final byte tipoBoolean = 1;
@@ -1179,7 +1284,7 @@ class Simbolo{
         this.ehDigito = false;
     }
 
-    public Simbolo(byte token, String lexema, String tipo) {
+    public Simbolo(byte token, String lexema, byte tipo) {
         this.token = token;
         this.lexema = lexema;
         this.tipo = tipo;
@@ -1315,6 +1420,16 @@ class TabelaDeSimbolos{
         return tabela.get(lexema);
     }
 
+    /**
+     * Metodo para alterar o tipo do simbolo na tabela
+     * @param String lexema
+     * @param Simbolo simbolo
+     * @return Void
+     */
+    public void AlterarTipoLexema(String lexema, Simbolo simbolo) {
+        tabela.put(lexema, simbolo);
+    }
+
     public void PrintTabela() {
         int i = 0;
         for (String lexema : tabela.keySet()) {
@@ -1403,7 +1518,8 @@ class Util{
     public static char cursorInicio = 13;
     public static char fimDeArquivo = 65535;
     public static char espaco = 32;
-    public static int tamanhoMaxVetor = 32768;
+    public static int tamanhoMaxVetor = 65536;
+    public static int tamanhoMaxVetorInteiro = 32768;
 
 
     /**
@@ -1422,6 +1538,14 @@ class Util{
      */
     public static boolean EhDigito(char caracter){
         return caracter >= '0' && caracter <= '9';
+    }
+
+    public static boolean validarString(String lexema){
+      boolean retorna = true;
+        for(char letra: lexema.toCharArray()){
+          retorna = EhLetra(letra) && retorna;
+        }
+        return retorna;
     }
 
     /**
