@@ -9,6 +9,6 @@ main {
 
   write("Digite seu nome: ");
   readln(nome);
-  for (n:=FALSE; n<=MAXITER; n:=n+1)
-    writeln("Ola ",nome);
+  for (n:=0; n<=MAXITER; n:=n+1)
+    writeln("Ola ",nome[0]);
 }

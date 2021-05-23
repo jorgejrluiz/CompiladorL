@@ -684,9 +684,14 @@ class AnalisadorSintatico {
   Simbolo simbolo;
   Simbolo novoSimbolo = new Simbolo();
   Simbolo simboloAnterior = new Simbolo();
+  Simbolo simboloAnteriorComando = new Simbolo();
   BufferedReader file;
   public boolean debugMode;
   public boolean segundoBloco = false;
+  public boolean ehComp = false;
+
+  //Simbolo simboloPrimeiroComp = new Simbolo();
+  Simbolo simboloSegundoComp = new Simbolo();
 
 
   /**
@@ -958,20 +963,20 @@ class AnalisadorSintatico {
         System.exit(0);
       } else {
         //MUDEI AQUI
-        simboloAnterior = this.simbolo;
+        simboloAnteriorComando = this.simbolo;
         Simbolo identificador = this.tabelasimbolos.BuscarLexema(this.simbolo.lexema);
         CasaToken(this.tabelasimbolos.IDENTIFICADOR);
-        if(simboloAnterior.tamanho == 0 && this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
-          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
+        if(simboloAnteriorComando.tamanho == 0 && this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnteriorComando.lexema + "].");
           System.exit(0);
-        } else if(simboloAnterior.tamanho != 0 && this.simbolo.token != this.tabelasimbolos.COLCHETE_ABERTO){
-          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
+        } else if(simboloAnteriorComando.tamanho != 0 && this.simbolo.token != this.tabelasimbolos.COLCHETE_ABERTO){
+          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnteriorComando.lexema + "].");
           System.exit(0);
         } else {
           if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
               CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
               this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
-              if(simboloAnterior.tamanho <= this.simbolo.tamanho){
+              if(simboloAnteriorComando.tamanho <= this.simbolo.tamanho){
                   System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
                   System.exit(0);
               }
@@ -986,10 +991,10 @@ class AnalisadorSintatico {
 
         CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
         Exp();
-        if(simboloAnterior.classe == 2){ //eh constante não pode alterar valor
-          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
+        if(simboloAnteriorComando.classe == 2){ //eh constante não pode alterar valor
+          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnteriorComando.lexema + "].");
           System.exit(0);
-        } else if(simboloAnterior.tipo != novoSimbolo.tipo){
+        } else if(simboloAnteriorComando.tipo != novoSimbolo.tipo){
           System.out.println(this.analisadorlexico.linha + "\ntipos incompativeis.");
           System.exit(0);
         }
@@ -1068,10 +1073,6 @@ class AnalisadorSintatico {
         Simbolo identificador = this.tabelasimbolos.BuscarLexema(this.simbolo.lexema);
         novoSimbolo.tipo = identificador.tipo;
         novoSimbolo.classe = identificador.classe;
-        if(identificador.classe == 2) {
-          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + this.simbolo.lexema + "].");
-          System.exit(0);
-        }
         CasaToken(this.tabelasimbolos.IDENTIFICADOR);
             if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
               CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
@@ -1157,31 +1158,66 @@ class AnalisadorSintatico {
   */
   public void Exp() {
     MostrarTransicao(this.simbolo, "Exp", "ExpS");
+    Simbolo simboloPrimeiroComp = new Simbolo();
+    simboloPrimeiroComp.lexema = this.simbolo.lexema;
+    simboloPrimeiroComp.tipo = this.simbolo.tipo;
+
     ExpS();
     if(this.simbolo.token == this.tabelasimbolos.DOIS_PONTOS_IGUAL){
       CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
+      ehComp = true;
       MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
+      if(simboloPrimeiroComp.tipo != simboloSegundoComp.tipo){
+        System.out.println(this.analisadorlexico.linha + "\ntipos incompativeis.");
+        System.exit(0);
+      }
     } else if(this.simbolo.token == this.tabelasimbolos.DIFERENTE){
       CasaToken(this.tabelasimbolos.DIFERENTE);
+      ehComp = true;
       MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
+      if(simboloPrimeiroComp.tipo != simboloSegundoComp.tipo){
+        System.out.println(this.analisadorlexico.linha + "\ntipos incompativeis.");
+        System.exit(0);
+      }
     } else if(this.simbolo.token == this.tabelasimbolos.MENOR){
       CasaToken(this.tabelasimbolos.MENOR);
+      ehComp = true;
       MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
+      if(simboloPrimeiroComp.tipo != simboloSegundoComp.tipo){
+        System.out.println(this.analisadorlexico.linha + "\ntipos incompativeis.");
+        System.exit(0);
+      }
     } else if(this.simbolo.token == this.tabelasimbolos.MAIOR){
       CasaToken(this.tabelasimbolos.MAIOR);
+      ehComp = true;
       MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
+      if(simboloPrimeiroComp.tipo != simboloSegundoComp.tipo){
+        System.out.println(this.analisadorlexico.linha + "\ntipos incompativeis.");
+        System.exit(0);
+      }
     } else if(this.simbolo.token == this.tabelasimbolos.MENOR_IGUAL){
       CasaToken(this.tabelasimbolos.MENOR_IGUAL);
+      ehComp = true;
       MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
+      if(simboloPrimeiroComp.tipo != simboloSegundoComp.tipo){
+        System.out.println(this.analisadorlexico.linha + "\ntipos incompativeis.");
+        System.exit(0);
+      }
+
     } else if(this.simbolo.token == this.tabelasimbolos.MAIOR_IGUAL){
       CasaToken(this.tabelasimbolos.MAIOR_IGUAL);
+      ehComp = true;
       MostrarTransicao(this.simbolo, "Exp", "ExpS");
       ExpS();
+      if(simboloPrimeiroComp.tipo != simboloSegundoComp.tipo){
+        System.out.println(this.analisadorlexico.linha + "\ntipos incompativeis.");
+        System.exit(0);
+      }
     }
   }
 
@@ -1261,6 +1297,10 @@ class AnalisadorSintatico {
         novoSimbolo.tipo = 3;  //EH CHAR
         novoSimbolo.lexema = this.simbolo.lexema;
       }
+      if(ehComp){
+        simboloSegundoComp = novoSimbolo;
+        ehComp = false;
+      }
       CasaToken(this.tabelasimbolos.CONSTANTE);
     } else if (this.simbolo.token == this.tabelasimbolos.TRUE)  {
       this.simbolo.tipo = 1; //EH BOOLEAN
@@ -1275,16 +1315,25 @@ class AnalisadorSintatico {
         System.out.println(this.analisadorlexico.linha + "\nidentificador nao declarado [" + this.simbolo.lexema + "].");
         System.exit(0);
       } else {
-        simboloAnterior = this.simbolo;
+        novoSimbolo = this.simbolo;
+/*
+        if(ehComp){
+          simboloSegundoComp.tipo = novoSimbolo.tipo;
+          simboloSegundoComp.lexema = novoSimbolo.lexema;
+          simboloSegundoComp.tamanho = novoSimbolo.tamanho;
+          ehComp = false;
+        }
+*/
         CasaToken(this.tabelasimbolos.IDENTIFICADOR);
-        if(simboloAnterior.tamanho == 0 && this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
-          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
+/*
+        if(novoSimbolo.tamanho == 0 && this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + novoSimbolo.lexema + "].");
           System.exit(0);
-        } else if(simboloAnterior.tamanho != 0 && this.simbolo.token != this.tabelasimbolos.COLCHETE_ABERTO){
+        } else if(novoSimbolo.tamanho != 0 && this.simbolo.token != this.tabelasimbolos.COLCHETE_ABERTO){
           //19 cai aqui
-          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
+          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + novoSimbolo.lexema + "].");
           System.exit(0);
-        } else {
+        } else { */
             if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
               CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
               MostrarTransicao(this.simbolo, "F", "Exp");
@@ -1297,7 +1346,7 @@ class AnalisadorSintatico {
               //}
               CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
             }
-          }
+          //}
       }
     } else {
       if (analisadorlexico.fimDeArquivo) {
