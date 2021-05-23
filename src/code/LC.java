@@ -136,6 +136,11 @@ class AnalisadorLexico{
     if(!fimDeArquivo) {
       if(tabelaDeSimbolos.BuscarLexema(lexema) == null) {
         if(lexema.charAt(0) == '"' || lexema.charAt(0) == '\'' || Util.EhDigito(lexema.charAt(0))) {
+/*
+        System.out.println("EU ENTREI AQUI " + lexema + " " +devolve + " " +ehDigito);
+          if(devolve && ehDigito) {
+              lexema = lexema.substring(0, lexema.length()-1);
+          }*/
           Simbolo simboloConst = new Simbolo(tabelaDeSimbolos.CONSTANTE, lexema, ehDigito);
           return simboloConst;
         } else {
@@ -572,6 +577,7 @@ class AnalisadorLexico{
     char caracter = LerCaracter();
 
     if(Util.EhDigito(caracter)){
+      ehDigito = true;
       lexema += caracter;
       MostrarTransicao(caracter, 14, 15);
       return 15;
@@ -581,7 +587,6 @@ class AnalisadorLexico{
       MostrarTransicao(caracter, 13, 18);
       return 18;
     } else if(!Util.EhDigito(caracter) && !Util.EhHexadecimal(caracter)) {
-      ehDigito = false;
       MostrarTransicao(caracter, 13, 19);
       devolve = true;
       return 19;
@@ -598,14 +603,15 @@ class AnalisadorLexico{
     char caracter = LerCaracter();
 
     if(caracter == 'h' || !Util.EhDigito(caracter) && !Util.EhHexadecimal(caracter)){
-      ehDigito = false;
       lexema += caracter;
       MostrarTransicao(caracter, 15, 19);
       if (caracter != 'h'){
         devolve = true;
+        System.out.println("PASSO AQUI NO 15");
       }
       return 19;
     } else if(Util.EhDigito(caracter)){
+      ehDigito = true;
       lexema += caracter;
       MostrarTransicao(caracter, 15, 16);
       return 16;
@@ -621,6 +627,7 @@ class AnalisadorLexico{
     char caracter = LerCaracter();
 
     if(Util.EhDigito(caracter)){
+      ehDigito = true;
       lexema += caracter;
       MostrarTransicao(caracter, 16, 16);
       return 16;
@@ -640,7 +647,6 @@ class AnalisadorLexico{
     char caracter = LerCaracter();
 
     if(Util.EhDigito(caracter) || Util.EhHexadecimal(caracter)){
-      ehDigito = false;
       lexema += caracter;
       MostrarTransicao(caracter, 17, 18);
       return 18;
@@ -860,6 +866,8 @@ class AnalisadorSintatico {
             } else if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO) {
               CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
               this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
+              simboloAnterior.tamanho = this.simbolo.tamanho;
+              tabelasimbolos.AlterarTipoLexema(simboloAnterior.lexema, simboloAnterior);
               //verifica se o valor do vetor ultrapassa o permitido
               if(this.simbolo.tamanho > Util.tamanhoMaxVetor){
                   System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
@@ -947,22 +955,32 @@ class AnalisadorSintatico {
         //MUDEI AQUI
         simboloAnterior = this.simbolo;
         CasaToken(this.tabelasimbolos.IDENTIFICADOR);
-
-        if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
-          CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
-          this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
-          Exp();
-          //verifica se o valor do vetor ultrapassa o permitido
-          if(this.simbolo.tamanho > Util.tamanhoMaxVetor){
-              System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
-              System.exit(0);
-          }
-          CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+        if(simboloAnterior.tamanho == 0 && this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
+          System.exit(0);
+        } else if(simboloAnterior.tamanho != 0 && this.simbolo.token != this.tabelasimbolos.COLCHETE_ABERTO){
+          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
+          System.exit(0);
+        } else {
+          if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+              CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+              this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
+              if(simboloAnterior.tamanho <= this.simbolo.tamanho){
+                  System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
+                  System.exit(0);
+              }
+              Exp();
+              //verifica se o valor do vetor ultrapassa o permitido
+              if(this.simbolo.tamanho > Util.tamanhoMaxVetor){
+                  System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
+                  System.exit(0);
+              }
+              CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
         }
 
         CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
         Exp();
-        if(simboloAnterior.classe == 2){ //eh constante não pode alterar valor
+        if(simboloAnterior.classe == 2){ //eh constante não pode alterada
               System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
               System.exit(0);
         } else if(simboloAnterior.tipo != novoSimbolo.tipo){
@@ -973,6 +991,7 @@ class AnalisadorSintatico {
           CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
           this.segundoBloco = false;
         }
+      }
 
       }
     } else if(this.simbolo.token == this.tabelasimbolos.FOR){
@@ -1041,22 +1060,22 @@ class AnalisadorSintatico {
         System.exit(0);
       } else {
         CasaToken(this.tabelasimbolos.IDENTIFICADOR);
-        if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
-          CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
-          //this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
-          Exp();
-          //verifica se o valor do vetor ultrapassa o permitido
-          //if(this.simbolo.tamanho > Util.tamanhoMaxVetor){
-          //    System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
-          //    System.exit(0);
-          //}
-          CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
-        }
-        CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
-        if(!this.segundoBloco){
-          CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-          this.segundoBloco = false;
-        }
+            if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+              CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+              //this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
+              Exp();
+              //verifica se o valor do vetor ultrapassa o permitido
+              //if(this.simbolo.tamanho > Util.tamanhoMaxVetor){
+              //    System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
+              //    System.exit(0);
+              //}
+              CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+            }
+            CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
+            if(!this.segundoBloco){
+              CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+              this.segundoBloco = false;
+            }
       }
     } else if(this.simbolo.token == this.tabelasimbolos.WRITE){
       CasaToken(this.tabelasimbolos.WRITE);
@@ -1242,19 +1261,29 @@ class AnalisadorSintatico {
         System.out.println(this.analisadorlexico.linha + "\nidentificador nao declarado [" + this.simbolo.lexema + "].");
         System.exit(0);
       } else {
+        simboloAnterior = this.simbolo;
         CasaToken(this.tabelasimbolos.IDENTIFICADOR);
-        if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
-          CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
-          MostrarTransicao(this.simbolo, "F", "Exp");
-          //this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
-          Exp();
-          //verifica se o valor do vetor ultrapassa o permitido
-          //if(this.simbolo.tamanho > Util.tamanhoMaxVetor){
-          //    System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
-          //    System.exit(0);
-          //}
-          CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
-        }
+        if(simboloAnterior.tamanho == 0 && this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
+          System.exit(0);
+        } else if(simboloAnterior.tamanho != 0 && this.simbolo.token != this.tabelasimbolos.COLCHETE_ABERTO){
+          //19 cai aqui
+          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
+          System.exit(0);
+        } else {
+            if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+              CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+              MostrarTransicao(this.simbolo, "F", "Exp");
+              //this.simbolo.tamanho = Integer.valueOf(this.simbolo.lexema);
+              Exp();
+              //verifica se o valor do vetor ultrapassa o permitido
+              //if(this.simbolo.tamanho > Util.tamanhoMaxVetor){
+              //    System.out.println(this.analisadorlexico.linha + "\ntamanho do vetor excede o maximo permitido.");
+              //    System.exit(0);
+              //}
+              CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+            }
+          }
       }
     } else {
             if (analisadorlexico.fimDeArquivo) {
