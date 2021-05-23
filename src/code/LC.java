@@ -602,7 +602,8 @@ class AnalisadorLexico{
   public int Estado15(){
     char caracter = LerCaracter();
 
-    if(caracter == 'h' || !Util.EhDigito(caracter) && !Util.EhHexadecimal(caracter)){
+    if(caracter == 'h'){
+      ehDigito = false;
       lexema += caracter;
       MostrarTransicao(caracter, 15, 19);
       if (caracter != 'h'){
@@ -615,6 +616,10 @@ class AnalisadorLexico{
       lexema += caracter;
       MostrarTransicao(caracter, 15, 16);
       return 16;
+    } else if (Util.EhCaracterValido(caracter)){
+      MostrarTransicao(caracter, 15, 19);
+      devolve = true;
+      return 19;
     }
     MostrarErro(caracter);
     return 19;
@@ -785,18 +790,18 @@ class AnalisadorSintatico {
         System.out.println(this.analisadorlexico.linha + "\nidentificador ja declarado [" + this.simbolo.lexema + "].");
         System.exit(0);
       } else {
-            //caso nao criamos um novo
-            this.simbolo.classe = 2; // eh uma constante
-            simboloAnterior = this.simbolo;
+          //caso nao criamos um novo
+          this.simbolo.classe = 2; // eh uma constante
+          simboloAnterior = this.simbolo;
 
-            CasaToken(this.tabelasimbolos.IDENTIFICADOR);
-            CasaToken(this.tabelasimbolos.IGUAL);
-            MostrarTransicao(this.simbolo, "D", "V");
-            V(novoSimbolo);
-            simboloAnterior.tipo = novoSimbolo.tipo; // recebe o tipo do valor atribuido
-            tabelasimbolos.AlterarTipoLexema(simboloAnterior.lexema, simboloAnterior);
-            CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-          }
+          CasaToken(this.tabelasimbolos.IDENTIFICADOR);
+          CasaToken(this.tabelasimbolos.IGUAL);
+          MostrarTransicao(this.simbolo, "D", "V");
+          V(novoSimbolo);
+          simboloAnterior.tipo = novoSimbolo.tipo; // recebe o tipo do valor atribuido
+          tabelasimbolos.AlterarTipoLexema(simboloAnterior.lexema, simboloAnterior);
+          CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+        }
       } else {
             if (analisadorlexico.fimDeArquivo) {
                 System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
@@ -828,14 +833,14 @@ class AnalisadorSintatico {
       novoSimbolo.tipo = 1; //TIPO BOOLEAN
       X(novoSimbolo);
     } else {
-            if (analisadorlexico.fimDeArquivo) {
-                System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
-                System.exit(0);
-            } else {
-                System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
-                System.exit(0);
-            }
-        }
+      if (analisadorlexico.fimDeArquivo) {
+          System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
+          System.exit(0);
+      } else {
+          System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
+          System.exit(0);
+      }
+    }
   }
 
   /*
@@ -954,6 +959,7 @@ class AnalisadorSintatico {
       } else {
         //MUDEI AQUI
         simboloAnterior = this.simbolo;
+        Simbolo identificador = this.tabelasimbolos.BuscarLexema(this.simbolo.lexema);
         CasaToken(this.tabelasimbolos.IDENTIFICADOR);
         if(simboloAnterior.tamanho == 0 && this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
           System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
@@ -980,12 +986,12 @@ class AnalisadorSintatico {
 
         CasaToken(this.tabelasimbolos.DOIS_PONTOS_IGUAL);
         Exp();
-        if(simboloAnterior.classe == 2){ //eh constante não pode alterada
-              System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
-              System.exit(0);
+        if(simboloAnterior.classe == 2){ //eh constante não pode alterar valor
+          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + simboloAnterior.lexema + "].");
+          System.exit(0);
         } else if(simboloAnterior.tipo != novoSimbolo.tipo){
-              System.out.println(this.analisadorlexico.linha + "\ntipos incompativeis.");
-              System.exit(0);
+          System.out.println(this.analisadorlexico.linha + "\ntipos incompativeis.");
+          System.exit(0);
         }
         if(!this.segundoBloco){
           CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
@@ -1059,6 +1065,13 @@ class AnalisadorSintatico {
         System.out.println(this.analisadorlexico.linha + "\nidentificador nao declarado [" + this.simbolo.lexema + "].");
         System.exit(0);
       } else {
+        Simbolo identificador = this.tabelasimbolos.BuscarLexema(this.simbolo.lexema);
+        novoSimbolo.tipo = identificador.tipo;
+        novoSimbolo.classe = identificador.classe;
+        if(identificador.classe == 2) {
+          System.out.println(this.analisadorlexico.linha + "\nclasse de identificador incompativel [" + this.simbolo.lexema + "].");
+          System.exit(0);
+        }
         CasaToken(this.tabelasimbolos.IDENTIFICADOR);
             if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
               CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
@@ -1241,7 +1254,6 @@ class AnalisadorSintatico {
       Exp();
       CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
     } else if(this.simbolo.token == this.tabelasimbolos.CONSTANTE){
-      //System.out.println(this.simbolo.ehDigito + " " + this.simbolo.lexema);
       if(this.simbolo.ehDigito){
         novoSimbolo.tipo = 2;  // EH INT
         novoSimbolo.lexema = this.simbolo.lexema;
@@ -1251,13 +1263,15 @@ class AnalisadorSintatico {
       }
       CasaToken(this.tabelasimbolos.CONSTANTE);
     } else if (this.simbolo.token == this.tabelasimbolos.TRUE)  {
+      this.simbolo.tipo = 1; //EH BOOLEAN
+      novoSimbolo.tipo = 1;
       CasaToken(this.tabelasimbolos.TRUE);
-      this.simbolo.tipo = 1; //EH BOOLEAN
     } else if (this.simbolo.token == this.tabelasimbolos.FALSE)  {
-      CasaToken(this.tabelasimbolos.FALSE);
       this.simbolo.tipo = 1; //EH BOOLEAN
+      novoSimbolo.tipo = 1;
+      CasaToken(this.tabelasimbolos.FALSE);
     } else if(this.simbolo.token == this.tabelasimbolos.IDENTIFICADOR){
-      if(this.simbolo.tipo == 0){
+      if(this.simbolo.tipo == 0) {
         System.out.println(this.analisadorlexico.linha + "\nidentificador nao declarado [" + this.simbolo.lexema + "].");
         System.exit(0);
       } else {
@@ -1286,14 +1300,14 @@ class AnalisadorSintatico {
           }
       }
     } else {
-            if (analisadorlexico.fimDeArquivo) {
-                System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
-                System.exit(0);
-            } else {
-                System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
-                System.exit(0);
-            }
-        }
+      if (analisadorlexico.fimDeArquivo) {
+          System.out.println(analisadorlexico.linha + "\nfim de arquivo nao esperado.");
+          System.exit(0);
+      } else {
+          System.out.println(analisadorlexico.linha + "\ntoken nao esperado [" + this.simbolo.lexema + "].");
+          System.exit(0);
+      }
+    }
   }
 }
 
